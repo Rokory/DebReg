@@ -1,0 +1,16 @@
+﻿@model DebReg.Web.Models.UserViewModel
+
+@{
+    ViewBag.Title = Html.Encode(Resources.User.Registered.Strings.Title);
+}
+
+
+<div>
+    <h2>@Html.Encode(Resources.User.Registered.Strings.Heading)</h2>
+    <hr />
+    <p>@Html.Encode(Resources.User.Registered.Strings.BodyText)</p>
+    @Html.DisplayFor(model => model)
+</div>
+<p>
+    @Html.ActionLink("Login", Html.Encode(Resources.User.Registered.Strings.LoginLink), new { returnUrl = ViewBag.returnUrl }) |
+</p>

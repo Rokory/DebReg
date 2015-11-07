@@ -1,0 +1,74 @@
+﻿@model IEnumerable<DebReg.Models.Tournament>
+@if (Model != null) {
+    <h3>@Resources.TournamentRegistration.GetFutureTournamentsPartial.Strings.TournamentsOpenForRegistrationHeading</h3>
+    
+    if (Model.Count() > 0) {
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Start)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.End)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Location)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.RegistrationStart)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.RegistrationEnd)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.HostingOrganization.Name)
+                </th>
+            </tr>
+
+            @foreach (var item in Model) {
+                <tr>
+                    <td>
+                        @if (item.RegistrationStart < DateTime.UtcNow
+                            && item.RegistrationEnd > DateTime.UtcNow) {
+                            @Html.ActionLink(item.Name, "Register", new { tournamentId = item.Id })
+                        }
+                        else {
+                            @Html.DisplayFor(modelItem => item.Name)
+                        }
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Start)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.End)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Location)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RegistrationStart)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RegistrationEnd)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.HostingOrganization.Name)
+                    </td>
+                </tr>
+            }
+
+        </table>
+    }
+    else {
+        <p>@Resources.TournamentRegistration.GetFutureTournamentsPartial.Strings.NoTournamentsText</p>
+    }
+
+}
+
+@if (Model == null)
+{
+    <p>@Resources.TournamentRegistration.GetFutureTournamentsPartial.Strings.NoPermissionsText</p>
+}
+

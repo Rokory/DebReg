@@ -1,0 +1,31 @@
+﻿@model DebReg.Web.Models.TournamentOrganizationRegistrationViewModel
+@{
+    Layout = "";
+}
+<div class="panel with-nav-tabs panel-default">
+    <div class="panel-heading">
+        <ul class="nav nav-tabs">
+            <li role="presentation" class="active"><a href="#organization" data-toggle="tab">Organization</a></li>
+            <li role="presentation"><a href="#contacts" data-toggle="tab">Contacts</a></li>
+            <li role="presentation"><a href="#bookings" data-toggle="tab">Bookings</a></li>
+        </ul>
+    </div>
+    <div class="panel-body">
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="organization">
+                @Html.DisplayFor(model => model.Registration.Organization)
+            </div>
+
+            <div class="tab-pane fade in" id="contacts">
+                @Html.DisplayFor(model => model.Registration.Organization.UserAssociations, "OrganizationUsers")
+            </div>
+
+            <div class="tab-pane fade in" id="bookings">
+                @Html.DisplayFor(model => model, "Bookings")
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    formatDateTime();
+</script>

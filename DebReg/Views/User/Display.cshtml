@@ -1,0 +1,34 @@
+﻿@model DebReg.Web.Models.UserViewModel
+
+@{
+	if (Model.Tournament == null)
+	{
+		ViewBag.Title = Resources.User.Display.Strings.Title;
+	}
+	else
+	{
+		ViewBag.Title = Resources.User.Display.Strings.TitleForTournamentData;
+	}
+}
+
+<h2>
+		@Resources.User.Display.Strings.Heading
+</h2>
+<hr />
+
+@Html.DisplayFor(model => model)
+<div>
+	@Html.ActionLink(
+		Resources.User.Display.Strings.EditUserLink, 
+		"Update", 
+		Model.Tournament != null ? new { tournamentId = Model.Tournament.Id } : null)
+	@if (Model.Tournament == null)
+	{
+		<text> | </text>
+		
+		@Html.ActionLink(Resources.User.Display.Strings.ChangePasswordLink, "ChangePassword", new { userId = Model.User.Id })
+		
+		<text> | </text>
+		@Html.ActionLink(Resources.User.Display.Strings.LogoutLink, "Logout") 
+	}
+</div>

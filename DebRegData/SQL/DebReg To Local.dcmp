@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DataComparison>
+  <Version>10</Version>
+  <ConnectionProperties1>
+    <ConnectionString>Data Source=f9ojgs00xm.database.windows.net;Initial Catalog=debreg;Integrated Security=False;Persist Security Info=False;User ID=dkwien;Pooling=False</ConnectionString>
+    <FullDisplayName>f9ojgs00xm.database.windows.net.debreg (dkwien)</FullDisplayName>
+  </ConnectionProperties1>
+  <ConnectionProperties2>
+    <ConnectionString>Data Source=(localdb)\v11.0;Initial Catalog=DebReg;Integrated Security=True;Persist Security Info=False;Pooling=False</ConnectionString>
+    <FullDisplayName>(localdb)\v11.0.DebReg (EASYONLOCAL\rkorecky)</FullDisplayName>
+  </ConnectionProperties2>
+  <SessionSettings>Default</SessionSettings>
+</DataComparison>

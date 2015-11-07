@@ -1,0 +1,8 @@
+﻿@model DebReg.Models.User
+
+@{
+    ViewBag.Title = Resources.Home.Index.Strings.Title;
+}
+<h1>@Html.Encode(Resources.Home.Index.Strings.Heading)</h1>
+@Html.Action("GetRegistrationsPartial", "TournamentRegistration")
+

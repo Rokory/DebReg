@@ -1,0 +1,22 @@
+﻿@model DebReg.Models.Organization
+
+@{
+    ViewBag.Title = Resources.Organization.Display.Strings.Title;
+}
+
+<h2>@Resources.Organization.Display.Strings.Heading</h2>
+<hr />
+@Html.DisplayFor(model => model)
+<p>
+    @if (HttpContext.Current.User.IsInRole(Enum.GetName(typeof(DebReg.Models.OrganizationRole), DebReg.Models.OrganizationRole.Delegate)))
+    {
+        @Html.ActionLink(
+            String.Format("{0} | ", 
+            Resources.Organization.Display.Strings.EditOrganizationLink), 
+            "Register", 
+            new { organizationId = Model.Id })
+    }
+    
+    @Html.ActionLink(Resources.Organization.Display.Strings.SwitchOrganizationLink, "Select")
+
+</p>

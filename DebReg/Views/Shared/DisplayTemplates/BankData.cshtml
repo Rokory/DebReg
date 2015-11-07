@@ -1,0 +1,44 @@
+﻿@model DebReg.Models.TournamentOrganizationRegistration
+<h4>@Resources.Shared.Bookings.Strings.BankData</h4>
+<dl class="dl-horizontal">
+
+    <dt>
+        @Resources.Shared.Bookings.Strings.Receiver
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.Tournament.HostingOrganization.Name)
+    </dd>
+    <dt>
+        @Html.DisplayNameFor(model => model.Tournament.BankAccount.Iban)
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.Tournament.BankAccount.Iban)
+    </dd>
+    <dt>
+        @Html.DisplayNameFor(model => model.Tournament.BankAccount.Bic)
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.Tournament.BankAccount.Bic)
+    </dd>
+    <dt>
+        @Html.DisplayNameFor(model => model.Tournament.BankAccount.BankName)
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.Tournament.BankAccount.BankName)
+    </dd>
+    <dt>
+        @Html.DisplayNameFor(model => model.Tournament.BankAccount.BankAddress)
+    </dt>
+    <dd>
+        @Html.DisplayFor(model => model.Tournament.BankAccount.BankAddress, "Address1Line")
+    </dd>
+    <dt class="bg-info">
+        @Html.DisplayNameFor(model => model.Tournament.PaymentReference)
+    </dt>
+    <dd class="bg-info">
+        @String.Format(
+            Model.Tournament.PaymentReference,
+            Model.BookingCode,
+            Model.Organization.Abbreviation)
+    </dd>
+</dl>

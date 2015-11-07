@@ -1,0 +1,484 @@
+﻿@model DebReg.Web.Models.TournamentOrganizationRegistrationViewModel
+
+
+
+<!-- Constants -->
+
+<script>
+    var speakerAPIurl = "/api/Speaker";
+    var adjudicatorAPIurl = "/api/Adjudicator";
+
+    var teamAdded = 201;
+    var adjudicatorAdded = 202;
+    var teamUpdated = 205;
+    var adjudicatorUpdated = 206;
+    var notAuthorized = 401;
+    var registrationNotFound = 440;
+    var teamNotFound = 441;
+    var userNotFound = 442;
+    var adjudicatorNotFound = 443;
+    var tooManyTeams = 450;
+    var tooManySpeakers = 451;
+    var tooManyAdjudicators = 452;
+    var speakerAlreadyInOtherTeam = 460;
+    var speakerAlreadyInTeam = 461;
+    var speakerAlreadyAdjudicator = 462;
+    var adjudicatorAlreadyRegisteredWithOtherOrganization = 463;
+    var adjudicatorAlreadyRegistered = 464;
+    var adjudicatorAlreadySpeaker = 465;
+    var updating = 100;
+    var deleting = 101;
+</script>
+
+<!-- Models -->
+
+<script>
+    function speaker(teamId, userId) {
+        this.teamId = teamId;
+        this.userId = userId;
+    }
+
+    function person(id, name, email, error) {
+        this.id = ko.observable(id);
+        this.name = ko.observable(name);
+        this.email = ko.observable(email);
+        this.error = ko.observable(error);
+        this.status = ko.observable(0);
+    }
+
+    function team(id, name, speakers) {
+        this.id = ko.observable(id);
+        this.name = ko.observable(name);
+        this.speakers = ko.observableArray(speakers);
+    }
+
+    function adjudicator(tournamentId, organizationId, userId, user) {
+        this.tournamentId = tournamentId;
+        this.organizationId = organizationId;
+        this.userId = userId;
+        this.user = user;
+    }
+</script>
+
+<!-- Build view model -->
+
+<script>
+
+    var model = {
+        tournamentId: ko.observable('@Model.Registration.TournamentId'),
+        organizationId: ko.observable('@Model.Registration.OrganizationId'),
+        teams: ko.observableArray(),
+        adjudicators: ko.observableArray()
+    };
+
+    // Teams
+
+    @if (Model.Teams != null) {
+
+
+        for (int t = 0; t < Model.Teams.Count; t++) {
+            var team = Model.Teams[t];
+            <text>
+                model.teams.push(new team('@team.id', '@team.name', Array()));
+            </text>
+
+            // Speakers
+
+            if (team.speakers != null) {
+                for (int s = 0; s < team.speakers.Count; s++) {
+                    var speaker = @Model.Teams[t].speakers[s];
+                    var name = String.Format("{0} {1}", speaker.firstname, speaker.lastname);
+                    name = name.Replace("'", "\\'"); // Replace single quote with escape character
+                    var email = speaker.eMail == null ? null : speaker.eMail.Replace("'", "\\'");
+                    <text>
+                        model.teams()[@t].speakers.push(new person('@speaker.id', '@Html.Raw(name)', '@Html.Raw(email)'));
+                    </text>
+                }
+            }
+        }
+    }
+
+    // Adjudicators
+
+    @if (Model.Adjudicators != null) {
+        for (var a = 0; a < Model.Adjudicators.Count; a++) {
+            var adjudicator = Model.Adjudicators[a];
+            var name = String.Format("{0} {1}", adjudicator.user.firstname, adjudicator.user.lastname);
+            name = name.Replace("'", "\\'"); // Replace single quote with escape character
+            var email = adjudicator.user.eMail == null ? null : adjudicator.user.eMail.Replace("'", "\\'");
+
+            <text>
+                model.adjudicators().push(new person('@adjudicator.userId', '@Html.Raw(name)', '@email'))
+            </text>
+        }
+    }
+</script>
+
+
+<!-- API functions -->
+
+<script>
+    function callSpeakerApi(method, teamId, userId, success, error) {
+        var settings = {
+            url: speakerAPIurl,
+            type: method,
+            data: new speaker(teamId, userId),
+            success: success,
+            error: error
+        };
+        $.ajax(settings);
+    }
+
+    function callAdjudicatorApi(method, tournamentId, organizationId, userId, success, error) {
+        var settings = {
+            url: adjudicatorAPIurl,
+            type: method,
+            data: new adjudicator(tournamentId, organizationId, userId),
+            success: success,
+            error: error
+        };
+        $.ajax(settings);
+    }
+
+    function processAjaxError(jqXHR, textStatus, errorThrown) {
+        if (textStatus == 'timeout') { }
+        if (textStatus == 'about') { }
+        if (textStatus == 'parseerror') { }
+        if (textStatus == 'error') { }
+    }
+
+</script>
+
+<!-- Select functions -->
+
+<script>
+    function selectSpeaker(speaker, teamId) {
+        var newUserLink = '@Url.Action("Register", "User")'
+            + '?teamId=' + teamId
+            + '&replacesPerson=' + speaker.id()
+            + '&returnUrl=' + encodeURIComponent(window.location + '&tab=persons');
+
+        var callbackParameter = {
+            teamId: teamId,
+            speaker: speaker,
+            speakerId: speaker.id()
+        };
+
+        dialog.callback = updateSpeaker;
+        dialog.callbackParameter = callbackParameter;
+        dialog.newUserLink = newUserLink;
+
+        dialog.show();
+    }
+
+    function selectAdjudicator(adjudicator, tournamentId, organizationId) {
+        var newUserLink = '@Url.Action("Register", "User")'
+            + '?organizationId=' + organizationId
+            + '&tournamentId=' + tournamentId
+            + '&replacesPerson=' + adjudicator.id()
+            + '&returnUrl=' + encodeURIComponent(window.location + '&tab=persons');
+
+        var callbackParameter = {
+            organizationId: organizationId,
+            tournamentId: tournamentId,
+            adjudicator: adjudicator
+        };
+
+        dialog.callback = updateAdjudicator;
+        dialog.callbackParameter = callbackParameter;
+        dialog.newUserLink = newUserLink;
+
+        dialog.show();
+    }
+</script>
+
+<!-- Update and refresh functions -->
+
+<script>
+    function refreshUI(status, person, user) {
+        if (status == teamUpdated || status == adjudicatorAdded || status == adjudicatorUpdated) {
+            person.error(false);
+            person.id(user.id);
+            person.name(user.firstname + ' ' + user.lastname);
+            person.email(user.eMail);
+            return;
+        }
+
+        person.error(true);
+        person.id('');
+        person.name('@Resources.TournamentRegistration.Display.Strings.DefaultFirstName @Resources.TournamentRegistration.Display.Strings.DefaultLastName');
+
+        if (status == adjudicatorAlreadyRegisteredWithOtherOrganization) {
+            person.email(user.firstname + ' ' + user.lastname + ' @Resources.TournamentRegistration.Display.Strings.ErrorAdjudicatorAlreadyWithOtherOrganization');
+        }
+
+        if (status == adjudicatorAlreadyRegistered) {
+            person.email(user.firstname + ' ' + user.lastname + ' @Resources.TournamentRegistration.Display.Strings.ErrorAdjudicatorAlreadyRegistered');
+        }
+
+        if (status == adjudicatorAlreadySpeaker) {
+            person.email(user.firstname + ' ' + user.lastname + ' @Resources.TournamentRegistration.Display.Strings.ErrorAdjudicatorAlreadySpeaker');
+        }
+
+        if (status == speakerAlreadyInTeam) {
+            person.email(user.firstname + ' ' + user.lastname + ' @Resources.TournamentRegistration.Display.Strings.ErrorSpeakerAlreadyInTeam');
+        }
+
+        if (status == speakerAlreadyInOtherTeam) {
+            person.email(user.firstname + ' ' + user.lastname + ' @Resources.TournamentRegistration.Display.Strings.ErrorSpeakerAlreadyInOtherTeam');
+        }
+
+        if (status == speakerAlreadyAdjudicator) {
+            person.email(user.firstname + ' ' + user.lastname + ' @Resources.TournamentRegistration.Display.Strings.ErrorSpeakerAlreadyAdjudicator');
+        }
+
+    }
+
+    function updateSpeaker(user, callBackParameter) {
+
+        // Delete Speaker
+
+        var oldUserId = callBackParameter.speakerId;
+
+        if (oldUserId != '' && oldUserId != '00000000-0000-0000-0000-000000000000') {
+
+            callBackParameter.speaker.status(deleting);
+
+            callSpeakerApi("DELETE", callBackParameter.teamId, oldUserId,
+
+                // success
+
+                function (data, textStatus, jqXHR) {
+
+                    // Add speaker
+
+                    callBackParameter.speaker.status(updating);
+
+                    callSpeakerApi("POST", callBackParameter.teamId, user.id,
+
+                        // success
+
+                        function (data, textStatus, jqXHR) {
+                            callBackParameter.speaker.status(0);
+                            refreshUI(data, callBackParameter.speaker, user);
+                        },
+
+                        // error
+
+                        function (jqXHR, textStatus, errorThrown) {
+                            callBackParameter.speaker.status(0);
+                            processAjaxError(jqXHR, textStatus, errorThrown);
+                        }
+                    );
+                },
+
+                // error
+
+                function (jqXHR, textStatus, errorThrown) {
+                    callBackParameter.speaker.status(0);
+                    processAjaxError(jqXHR, textStatus, errorThrown);
+                }
+            );
+        }
+        else {
+            // Add apeaker
+
+            callBackParameter.speaker.status(updating);
+
+            callSpeakerApi("POST", callBackParameter.teamId, user.id,
+
+                // success
+
+                function (data, textStatus, jqXHR) {
+                    callBackParameter.speaker.status(0);
+                    refreshUI(data, callBackParameter.speaker, user);
+                },
+
+                // error
+
+                function (jqXHR, textStatus, errorThrown) {
+                    callBackParameter.speaker.status(0);
+                    processAjaxError(jqXHR, textStatus, errorThrown);
+                }
+            )
+        }
+    }
+
+    function updateAdjudicator(user, callBackParameter) {
+
+        // Delete adjudicator
+
+        var oldUserId = callBackParameter.adjudicator.id();
+
+        if (oldUserId != '' && oldUserId != '00000000-0000-0000-0000-000000000000') {
+            callBackParameter.adjudicator.status(deleting);
+            callAdjudicatorApi("DELETE", callBackParameter.tournamentId, callBackParameter.organizationId, oldUserId,
+
+                // success
+
+                function (data, textStatus, jqXHR) {
+
+                    // Add adjudicator
+                    callBackParameter.adjudicator.status(updating);
+                    callAdjudicatorApi("POST", callBackParameter.tournamentId, callBackParameter.organizationId, user.id,
+
+                        // success
+
+                        function (data, textStatus, jqXHR) {
+                            callBackParameter.adjudicator.status(0);
+                            refreshUI(data, callBackParameter.adjudicator, user);
+                        },
+
+                        // error
+
+                        function (jqXHR, textStatus, errorThrown) {
+                            callBackParameter.speaker.status(0);
+                            processAjaxError(jqXHR, textStatus, errorThrown);
+                        }
+                    );
+                },
+
+                // error
+
+                function (jqXHR, textStatus, errorThrown) {
+                    callBackParameter.speaker.status(0);
+                    processAjaxError(jqXHR, textStatus, errorThrown);
+                }
+            );
+        }
+        else {
+            // Add adjudicator
+
+            callBackParameter.adjudicator.status(updating);
+            callAdjudicatorApi("POST", callBackParameter.tournamentId, callBackParameter.organizationId, user.id,
+
+                // success
+
+                function (data, textStatus, jqXHR) {
+                    callBackParameter.adjudicator.status(0);
+                    refreshUI(data, callBackParameter.adjudicator, user);
+                },
+
+                // error
+
+                function (jqXHR, textStatus, errorThrown) {
+                    callBackParameter.speaker.status(0);
+                    processAjaxError(jqXHR, textStatus, errorThrown);
+                }
+            );
+        }
+
+
+    }
+
+</script>
+
+
+<!-- User interface -->
+
+<div id="teamsAndAdjudicators">
+
+    <!-- Teams -->
+
+    @if (Model.Teams.Count > 0)
+    {
+        
+        <h3>@Resources.TournamentRegistration.Display.Strings.TeamsHeading</h3>
+
+        <div data-bind="foreach: teams">
+            <!-- Team Name -->
+            <h4 data-bind="text: name"></h4>
+
+            <!-- Speakers -->
+            <div data-bind="foreach: speakers">
+                <div class="row">
+                    <!-- Select button -->
+                    <div class="col-xs-2">
+                        <button data-bind="click: function(data) {selectSpeaker(data, $parent.id())}" class="btn btn-default selectSpeakerButton">
+                            <span class="glyphicon glyphicon-search" />
+                        </button>
+                    </div>
+
+                    <div class="col-xs-10">
+                        
+                        <!-- User current -->
+
+                        <div class="row" data-bind="visible: status()==0">
+                            <!-- Name -->
+                            <div data-bind="text: name" class="col-sm-4"></div>
+
+                            <!-- E-Mail -->
+                            <div data-bind="text: email, css: {'bg-danger': error}" class="col-sm-6"></div>
+                        </div>
+
+                        <!-- Progress bar -->
+
+                        <div class="progress" data-bind="visible: status()!=0">
+                            <div 
+                                 class="progress-bar progress-bar-striped active" 
+                                 role="progressbar" 
+                                 style="width:100%"
+                                 data-bind="css: {'progress-bar-danger': status()==deleting}"
+                            >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+    <!-- Adjudicators -->
+
+    @if (Model.Adjudicators.Count > 0)
+    {
+        
+    
+        <h3>@Resources.TournamentRegistration.Display.Strings.AdjudicatorsHeading</h3>
+        <div data-bind="foreach: adjudicators">
+        <div class="row">
+            <!-- Select button -->
+            <div class="col-xs-2">
+                <button data-bind="click: function(data) {selectAdjudicator(data, $parent.tournamentId(), $parent.organizationId())}" class="btn btn-default selectAdjudicatorButton">
+                    <span class="glyphicon glyphicon-search" />
+                </button>
+            </div>
+
+            <div class="col-xs-10">
+
+                <!-- Adjudicator current -->
+
+                <div class="row" data-bind="visible: status()==0">
+                    <!-- Name -->
+                    <div data-bind="text: name" class="col-sm-4"></div>
+
+                    <!-- E-Mail -->
+                    <div data-bind="text: email, css: {'bg-danger': error}" class="col-sm-6"></div>
+                </div>
+
+                <!-- Progress bar -->
+
+                <div class="progress" data-bind="visible: status()!=0">
+                    <div class="progress-bar progress-bar-striped active"
+                         role="progressbar"
+                         style="width:100%"
+                         data-bind="css: {'progress-bar-danger': status()==deleting}">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+        
+    }
+</div>
+
+<!-- Main -->
+
+<script>
+
+    var dialog = new findUsersDialog();
+
+    ko.applyBindings(model, document.getElementById('teamsAndAdjudicators'));
+</script>
+

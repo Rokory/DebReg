@@ -1,0 +1,89 @@
+﻿@model IEnumerable<DebReg.Models.BookingRecord>
+@{
+    ViewBag.Title = Resources.TournamentManagement.Finance.Journal.Strings.Title;
+}
+
+<h2>
+    @Resources.TournamentManagement.Finance.Journal.Strings.Heading
+</h2>
+<div>
+    <a href="#totals" class="btn btn-default">
+        @Resources.TournamentManagement.Finance.Journal.Strings.ToTotalsButtons
+    </a>
+</div>
+
+@{
+    Decimal balance = Model.Sum(b => b.Value * (b.Credit ? 1 : -1));
+    String bgBalance = "";
+    if (balance > 0) {
+        bgBalance = "bg-success";
+    }
+    if (balance < 0) {
+        bgBalance = "bg-danger";
+    }
+}
+<table class="table table-bordered table-striped table-condensed">
+    <thead>
+        <tr>
+            <th>@Resources.Models.BookingRecord.Strings.Date</th>
+            <th>@Resources.Models.Organization.Strings.Name</th>
+            <th>@Resources.Models.BookingRecord.Strings.Note</th>
+            <th>@Resources.Models.BookingRecord.Strings.ProductName</th>
+            <th class="text-right">@Resources.Models.BookingRecord.Strings.Quantity</th>
+            <th class="text-right">@Resources.Models.BookingRecord.Strings.Price</th>
+            <th class="text-right">@Resources.TournamentRegistration.Display.Strings.DebitLabel</th>
+            <th class="text-right">@Resources.TournamentRegistration.Display.Strings.CreditLabel</th>
+    </thead>
+    <tbody>
+        @foreach (var booking in Model.OrderBy(b => b.Date)) {
+            <tr>
+                <td>@Html.DisplayFor(model => booking.Date, "Date")</td>
+                <td>@Html.DisplayFor(model => booking.Organization.Name)</td>
+                <td>@Html.DisplayFor(model => booking.Note)</td>
+                <td>@Html.DisplayFor(model => booking.ProductName)</td>
+                <td class="text-right">@Html.DisplayFor(model => booking.Quantity)</td>
+                <td class="text-right">@Html.DisplayFor(model => booking.Price)</td>
+                <td class="text-right">
+                    @if (!booking.Credit) {
+                        <div>
+                            @Html.DisplayFor(model => booking.Value)
+                        </div>
+                    }
+                </td>
+                <td class="text-right">
+                    @if (booking.Credit) {
+                        <div>
+                            @Html.DisplayFor(model => booking.Value)
+                        </div>
+                    }
+                </td>
+            </tr>
+        }
+        <tr id="totals">
+            @{
+                Decimal debitTotal = Model
+                    .Where(b => !b.Credit)
+                    .Sum(b => b.Value);
+                Decimal creditTotal = Model
+                    .Where(b => b.Credit)
+                    .Sum(b => b.Value);
+            }
+            <th colspan="6" class="text-right"><strong>@Resources.TournamentRegistration.Display.Strings.TotalLabel</strong></th>
+            <td class="text-right">
+                <strong>@Html.DisplayFor(model => debitTotal)</strong>
+            </td>
+            <td class="text-right">
+                <strong>@Html.DisplayFor(model => creditTotal)</strong>
+            </td>
+        </tr>
+        <tr>
+            <th colspan="6" class="text-right">
+                @Resources.TournamentRegistration.Strings.Balance
+            </th>
+            <td colspan="2" class="@bgBalance text-right">
+                <strong>@Html.DisplayFor(model => balance)</strong>
+            </td>
+        </tr>
+    </tbody>
+</table>
+

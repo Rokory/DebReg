@@ -1,0 +1,27 @@
+﻿@model DebReg.Models.Organization
+<address>
+    <strong>@Html.DisplayFor(model => Model.Name)</strong><br />
+    @if (Model.Address != null) {
+        if (! String.IsNullOrWhiteSpace(Model.Address.StreetAddress1)) {
+            @Html.DisplayFor(model => Model.Address.StreetAddress1)<br />
+        }
+        if (! String.IsNullOrWhiteSpace(Model.Address.StreetAddress2)) {
+            @Html.DisplayFor(model => Model.Address.StreetAddress2)<br />
+        }
+        if (! String.IsNullOrWhiteSpace(Model.Address.City)
+                || ! String.IsNullOrWhiteSpace(Model.Address.PostalCode)) {
+
+            @Html.DisplayFor(model => Model.Address.PostalCode)@:&nbsp;@Html.DisplayFor(model => Model.Address.City)<br />
+        }
+        if (! String.IsNullOrWhiteSpace(Model.Address.Region)) {
+            @Html.DisplayFor(model => Model.Address.Region)<br />
+        }
+        if (! String.IsNullOrWhiteSpace(Model.Address.Country)) {
+            @Html.DisplayFor(model => Model.Address.Country)<br />
+        }
+    }
+</address>
+
+
+
+

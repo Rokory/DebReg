@@ -1,0 +1,61 @@
+﻿@model IEnumerable<DebReg.Web.Models.SpeakerRegistrationViewModel>
+
+@if (Model.Count() > 0) {
+	<h3>@Resources.TournamentRegistration.GetSpeakerRegistrationsPartial.Strings.Heading</h3>
+	<table class="table table-condensed">
+		<thead>
+			<tr>
+				<th>@Html.DisplayNameFor(model => model.Team.Tournament)</th>
+                <th></th>
+                <th></th>
+				<th>@Html.DisplayNameFor(model => model.Team.Organization)</th>
+				<th>@Html.DisplayNameFor(model => model.Team.Name)</th>
+				<th>@Html.DisplayNameFor(model => model.Team.Speaker)</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var speakerRegistration in Model) {
+				<tr>
+					<td>
+						@Html.DisplayFor(model => speakerRegistration.Team.Tournament.Name)
+					</td>
+					<td>
+						@if (speakerRegistration.PersonalDataComplete)
+						{
+							<span class="bg-success"><span class="glyphicon glyphicon-check"></span></span>
+						}
+						else
+						{
+							<span class="bg-danger">
+                                <span class="glyphicon glyphicon-unchecked"></span>
+                            </span>
+						}
+                    </td>
+                    <td>
+                        @if (! speakerRegistration.PersonalDataComplete)
+                        {
+                            <div class="bg-danger">
+                                <strong>@Resources.TournamentRegistration.Strings.MissingPersonalData</strong>
+                            </div>
+                        }
+
+                        @Html.ActionLink(Resources.TournamentRegistration.Strings.EditUserDataLinkCaption, "Display", "User", new { tournamentId = speakerRegistration.Team.TournamentId }, null)
+                    </td>
+					<td>
+						@Html.DisplayFor(model => speakerRegistration.Team.Organization.Name)
+					</td>
+					<td>
+						@Html.DisplayFor(model => speakerRegistration.Team.Name)
+					</td>
+					<td>
+						@foreach (var speaker in speakerRegistration.Team.Speaker)
+						{
+							@String.Format("{0} {1}", speaker.FirstName, speaker.LastName)
+							<br />
+						}
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}

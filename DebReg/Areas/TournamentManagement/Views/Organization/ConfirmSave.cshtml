@@ -1,0 +1,258 @@
+﻿@using DebReg.Models
+@using DebReg.Web.Areas.TournamentManagement.Models
+
+@model List<TournamentOrganizationRegistration>
+
+@{
+    ViewBag.Title = Resources.TournamentManagement.Organization.ConfirmSave.Strings.Title;
+}
+
+<h2>@Html.Encode(Resources.TournamentManagement.Organization.ConfirmSave.Strings.Heading)</h2>
+<p>@Html.Encode(Resources.TournamentManagement.Organization.ConfirmSave.Strings.Body)</p>
+    
+@{
+var sort = (SortField)ViewBag.Sort;
+Boolean descending = (Boolean)ViewBag.Descending;
+}
+
+<hr />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+                @Html.ActionLink(Html.Encode(Resources.Models.Organization.Strings.Name), "ConfirmSave", new { sort = SortField.Name, descending = sort == SortField.Name && !descending })
+                @if (sort == SortField.Name) {
+                    if (descending) {
+                        <span class="glyphicon glyphicon-arrow-down"></span>
+                    }
+                    else {
+                        <span class="glyphicon glyphicon-arrow-up"></span>
+                    }
+                }
+            </th>
+            <th>
+                @Html.ActionLink(Html.Encode(Resources.Models.Organization.Strings.Abbreviation), "ConfirmSave", new { sort = SortField.Abbreviation, descending = sort == SortField.Abbreviation && !descending })
+                @if (sort == SortField.Abbreviation) {
+                    if (descending) {
+                        <span class="glyphicon glyphicon-arrow-down"></span>
+                    }
+                    else {
+                        <span class="glyphicon glyphicon-arrow-up"></span>
+                    }
+                }
+            </th>
+            <th>
+                @Html.ActionLink(Html.Encode(Resources.Models.Address.Strings.City), "ConfirmSave", new { sort = SortField.City, descending = sort == SortField.City && !descending })
+                @if (sort == SortField.City) {
+                    if (descending) {
+                        <span class="glyphicon glyphicon-arrow-down"></span>
+                    }
+                    else {
+                        <span class="glyphicon glyphicon-arrow-up"></span>
+                    }
+                }
+            </th>
+            <th>
+                @Html.ActionLink(Html.Encode(Resources.Models.Address.Strings.Country), "ConfirmSave", new { sort = SortField.Country, descending = sort == SortField.Country && !descending })
+                @if (sort == SortField.Country) {
+                    if (descending) {
+                        <span class="glyphicon glyphicon-arrow-down"></span>
+                    }
+                    else {
+                        <span class="glyphicon glyphicon-arrow-up"></span>
+                    }
+                }
+            </th>
+            <th width="130">
+                @Html.ActionLink(Html.Encode(Resources.Models.TournamentOrganizationRegistration.Strings.OrganizationStatus), "ConfirmSave", new { sort = SortField.Status, descending = sort == SortField.Status })
+                @if (sort == SortField.Status) {
+                    if (descending) {
+                        <span class="glyphicon glyphicon-arrow-down"></span>
+                    }
+                    else {
+                        <span class="glyphicon glyphicon-arrow-up"></span>
+                    }
+                }
+            </th>
+            <th>
+                @Html.Encode(Resources.Models.TournamentOrganizationRegistration.Strings.OrganizationStatusNote)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Count(); i++) {
+            <tr>
+                @*Expand/Collapse icons*@
+                <td>
+                    <a href="javascript:void(0);"
+                        onclick="toggleOrgDetails(@i);">
+                        <span id="expand_@i"
+                                class="glyphicon glyphicon-expand">
+                        </span>
+                        <span id="collapse_@i"
+                                class="glyphicon glyphicon-collapse-up"
+                                style="display:none">
+                        </span>
+                    </a>
+                </td>
+
+                @*Organization Name*@
+                <td>
+                    @Html.DisplayFor(model => model[i].Organization.Name)
+                </td>
+
+                @*Abbreviation*@
+                <td>
+                    @Html.DisplayFor(model => model[i].Organization.Abbreviation)
+                </td>
+
+                @*City*@
+                <td>
+                    @if (Model[i].Organization.Address != null) {
+                        @Html.DisplayFor(model => model[i].Organization.Address.City)
+                    }
+                </td>
+
+                @*Country*@
+                <td>
+                    @if (Model[i].Organization.Address != null) {
+                        @Html.DisplayFor(model => model[i].Organization.Address.Country)
+                    }
+                </td>
+
+                @*Status*@
+                @{
+                    String statusTagClass = "";
+                    switch (Model[i].OrganizationStatus) {
+                        case OrganizationStatus.Unknown:
+                            break;
+                        case OrganizationStatus.Approved:
+                            statusTagClass = "bg-success";
+                            break;
+                        case OrganizationStatus.Dropped:
+                            statusTagClass = "bg-danger";
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                <td class="@statusTagClass">
+                    @Html.DisplayFor(model => model[i].OrganizationStatus)
+                </td>
+
+                @*Status Note*@
+                <td>
+                    @Html.DisplayFor(model => model[i].OrganizationStatusNote)
+            </tr>
+
+            @*Details*@
+            <tr id="Details_@i" style="display:none">
+                <td></td>
+                <td colspan="3">
+                    @if (Model[i].Organization.Address != null) {
+                        if (!String.IsNullOrWhiteSpace(Model[i].Organization.Address.StreetAddress1)) {
+                            @Html.DisplayFor(model => model[i].Organization.Address.StreetAddress1)
+                            <br />
+                        }
+
+                        if (!String.IsNullOrWhiteSpace(Model[i].Organization.Address.StreetAddress2)) {
+                            @Html.DisplayFor(model => model[i].Organization.Address.StreetAddress2)
+                            <br />
+                        }
+
+                        @Html.DisplayFor(model => model[i].Organization.Address.PostalCode)<text> </text>
+                        @Html.DisplayFor(model => model[i].Organization.Address.City)
+                        if ((
+                                !String.IsNullOrWhiteSpace(Model[i].Organization.Address.PostalCode)
+                                || !String.IsNullOrWhiteSpace(Model[i].Organization.Address.City)
+                            )
+                            && !String.IsNullOrWhiteSpace(Model[i].Organization.Address.Region)) {
+                            <text>, </text>
+                        }
+                        @Html.DisplayFor(model => model[i].Organization.Address.Region)
+                        if (!String.IsNullOrWhiteSpace(Model[i].Organization.Address.PostalCode)
+                            || !String.IsNullOrWhiteSpace(Model[i].Organization.Address.City)
+                            || !String.IsNullOrWhiteSpace(Model[i].Organization.Address.Region)) {
+
+                            <br />
+                        }
+
+                        if (!String.IsNullOrWhiteSpace(Model[i].Organization.Address.Country)) {
+                            @Html.DisplayFor(model => model[i].Organization.Address.Country)
+                            <br />
+                        }
+                    }
+                    @Html.DisplayNameFor(model => model[i].Organization.University)
+                    @Html.DisplayFor(model => model[i].Organization.University)
+
+                    @if (Model[i].Organization.LinkedOrganizations != null
+                && Model[i].Organization.LinkedOrganizations.Count > 0) {
+
+                        <h4>Linked Universities</h4>
+                    foreach (var item in Model[i].Organization.LinkedOrganizations) {
+                        <p>
+                            @Html.DisplayFor(model => item.Name)<text>,</text>
+                            @if (item.Address != null) {
+                                if (!String.IsNullOrWhiteSpace(item.Address.StreetAddress1)) {
+                                    @Html.DisplayFor(model => item.Address.StreetAddress1)<text>,</text>
+
+                                }
+                                if (!String.IsNullOrWhiteSpace(item.Address.StreetAddress2)) {
+                                    @Html.DisplayFor(model => item.Address.StreetAddress2)<text>,</text>
+                                }
+                                if (!String.IsNullOrWhiteSpace(item.Address.PostalCode)) {
+                                    @Html.DisplayFor(model => item.Address.PostalCode)<text> </text>
+                                }
+                                if (!String.IsNullOrWhiteSpace(item.Address.City)) {
+                                    @Html.DisplayFor(model => item.Address.City)<text>,</text>
+                                }
+                                if (!String.IsNullOrWhiteSpace(item.Address.Region)) {
+                                    @Html.DisplayFor(model => item.Address.Region)<text>,</text>
+                                }
+                                if (!String.IsNullOrWhiteSpace(item.Address.Country)) {
+                                    @Html.DisplayFor(model => item.Address.Country)
+                                }
+
+                            }
+                        </p>
+                    }
+                    }
+                </td>
+                <td colspan="2">
+                    <h4>Contacts</h4>
+                    <div>
+                        @foreach (var item in Model[i].Organization.UserAssociations) {
+                            @Html.DisplayFor(model => item.User.FirstName)
+                            <text> </text>
+                            @Html.DisplayFor(model => item.User.LastName)
+                            <br />
+                            <a href="mailto:@item.User.Email">@Html.DisplayFor(model => item.User.Email)</a>
+                            <br />
+                            @Html.DisplayFor(model => item.User.PhoneNumber)
+                        }
+                    </div>
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model[i].Notes)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@using (Html.BeginForm()) {
+    <button type="submit" name="confirmed" value="@Boolean.TrueString" class="btn btn-success">@Html.Encode(Resources.TournamentManagement.Organization.ConfirmSave.Strings.YesButtonCaption)</button>
+    <button type="submit" name="confirmed" value="@Boolean.FalseString" class="btn btn-danger">@Html.Encode(Resources.TournamentManagement.Organization.ConfirmSave.Strings.NoButtonCaption)</button>
+}
+
+<script>
+    var toggleOrgDetails = function (index) {
+        $('tr#Details_' + index).toggle();
+        $('span#expand_' + index).toggle();
+        $('span#collapse_' + index).toggle();
+    }
+
+</script>

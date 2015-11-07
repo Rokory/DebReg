@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="EMailChangePasswordNote" xml:space="preserve">
+    <value>Please note, that you will have to change your password at your first login.</value>
+    <comment>Note to user to change the password after first login in welcome and password reset e-mail.</comment>
+  </data>
+  <data name="EMailClickLink" xml:space="preserve">
+    <value>Click the link below to login and change your password now.</value>
+    <comment>Instruction to user to click the link below and change the password in welcome and password resete-mail.</comment>
+  </data>
+  <data name="EMailPassword" xml:space="preserve">
+    <value>Your initial password:</value>
+    <comment>Caption for password in welcomeand password reset e-mail.</comment>
+  </data>
+  <data name="EMailUsername" xml:space="preserve">
+    <value>Your E-Mail address is your username:</value>
+    <comment>Caption for username = e-mail addressin welcome and password reset e-mail body.</comment>
+  </data>
+  <data name="ErrorDuplicateEMail" xml:space="preserve">
+    <value>A user with this e-mail address already exists.</value>
+    <comment>Error message if e-mail address is already registered.</comment>
+  </data>
+  <data name="ErrorEMailPasswordIncorrect" xml:space="preserve">
+    <value>E-mail or password incorrect.</value>
+    <comment>Error message for incorrect data on login page.</comment>
+  </data>
+  <data name="ErrorOldPasswordIncorrect" xml:space="preserve">
+    <value>Old password incorrect.</value>
+    <comment>Error message if old password is incorrect in password change request.</comment>
+  </data>
+  <data name="ErrorOrganizationNotFound" xml:space="preserve">
+    <value>Organisation is incorrect. Please verify your input.</value>
+    <comment>Error messageif organization was not found in associated organizations of user in password reset request.</comment>
+  </data>
+  <data name="ErrorPasswordsDoNotMatch" xml:space="preserve">
+    <value>Passwords do not match.</value>
+    <comment>Error message if passwords do not match in password change or password reset request.</comment>
+  </data>
+  <data name="ErrorPasswordsIdentical" xml:space="preserve">
+    <value>The new password must not be identitical to the old password.</value>
+  </data>
+  <data name="ErrorUserNotFound" xml:space="preserve">
+    <value>We could not find a matching user. Please verify your input.</value>
+    <comment>Error message if user was not found in password reset request.</comment>
+  </data>
+  <data name="ResetEMailBodyIntro" xml:space="preserve">
+    <value>Your password for DebReg was reset based on a user request.</value>
+    <comment>First sentence of password reset e-mail body.</comment>
+  </data>
+  <data name="ResetEMailSubject" xml:space="preserve">
+    <value>Your DebReg password was reset</value>
+    <comment>Subject for e-mail after password reset.</comment>
+  </data>
+  <data name="WelcomeEMailBodyIntro" xml:space="preserve">
+    <value>Welcome to DebReg, the exclusive service for debating tournament management.</value>
+    <comment>First sentence of welcome e-mail body.</comment>
+  </data>
+  <data name="WelcomeEMailSubject" xml:space="preserve">
+    <value>Welcome to DebReg!</value>
+    <comment>Subject of welcome e-mail body.</comment>
+  </data>
+</root>

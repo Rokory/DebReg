@@ -1,0 +1,133 @@
+﻿@model IEnumerable<DebReg.Web.Areas.TournamentManagement.Models.OrganizationAttendeesViewModel>
+
+@{
+    ViewBag.Title = @Resources.TournamentManagement.Report.MissingRegistrations.Strings.Title;
+}
+<h2>
+    @Resources.TournamentManagement.Report.MissingRegistrations.Strings.Heading
+</h2>
+<hr/>
+<table class="table table-condensed table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Registration.Organization.Name)
+            </th>
+            <th colspan="4">
+                @Resources.TournamentManagement.Report.MissingRegistrations.Strings.DelegatesHeading
+            </th>
+            <th>
+                @Resources.TournamentManagement.Report.MissingRegistrations.Strings.IncompleteTeamsHeading
+            </th>
+            <th>
+                @Resources.Models.TournamentOrganizationRegistration.Strings.TeamsPaid
+            </th>
+            <th>
+                @Resources.TournamentManagement.Report.MissingRegistrations.Strings.MissingAdjudicatorsHeading
+            </th>
+            <th>
+                @Resources.Models.TournamentOrganizationRegistration.Strings.AdjucatorsPaid
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var organizationAttendeesViewModel in Model)
+        {
+            <tr>
+                <td rowspan="@organizationAttendeesViewModel.Delegates.Count">
+                    @Html.DisplayFor(model => organizationAttendeesViewModel.Registration.Organization.Name)
+                </td>
+                @{ var del = organizationAttendeesViewModel.Delegates.FirstOrDefault(); }
+                <td>
+                    @if (del != null)
+                    {
+                        @Html.DisplayFor(model => del.FirstName)
+                    }
+                </td>
+                <td>
+                    @if (del != null)
+                    {
+                        @Html.DisplayFor(model => del.LastName)
+
+                    }
+                </td>
+                <td>
+                    @if (del != null)
+                    {
+                        @Html.DisplayFor(model => del.Email)
+
+                    }
+                </td>
+                <td>
+                    @if (del != null)
+                    {
+                        @Html.DisplayFor(model => del.PhoneNumber)
+
+                    }
+                </td>
+                <td rowspan="@organizationAttendeesViewModel.Delegates.Count">
+                    @{
+                            var incompleteTeams = organizationAttendeesViewModel.Registration.TeamsPaid - organizationAttendeesViewModel.Teams.Count;
+                            foreach (var team in organizationAttendeesViewModel.Teams)
+                            {
+                                if (team.Speaker.Count < organizationAttendeesViewModel.Registration.Tournament.TeamSize)
+                                {
+                                    incompleteTeams++;
+                                }
+                            }
+                    }
+                    @Html.DisplayFor(model => incompleteTeams)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => organizationAttendeesViewModel.Registration.TeamsPaid)
+                </td>
+                <td rowspan="@organizationAttendeesViewModel.Delegates.Count">
+                    @{
+                        var misssingAdjudicators = organizationAttendeesViewModel.Registration.AdjudicatorsPaid - organizationAttendeesViewModel.Adjudicators.Count;
+                    }
+                    @Html.DisplayFor(model => misssingAdjudicators)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => organizationAttendeesViewModel.Registration.AdjudicatorsPaid)
+                </td>
+            </tr>
+            
+            // more delegates
+            
+            for (int i = 1; i < organizationAttendeesViewModel.Delegates.Count; i++)
+            {
+                <tr>
+                    @{ del = organizationAttendeesViewModel.Delegates.FirstOrDefault(); }
+                    <td>
+                        @if (del != null)
+                        {
+                            @Html.DisplayFor(model => del.FirstName)
+                        }
+                    </td>
+                    <td>
+                        @if (del != null)
+                        {
+                            @Html.DisplayFor(model => del.LastName)
+
+                        }
+                    </td>
+                    <td>
+                        @if (del != null)
+                        {
+                            @Html.DisplayFor(model => del.Email)
+
+                        }
+                    </td>
+                    <td>
+                        @if (del != null)
+                        {
+                            @Html.DisplayFor(model => del.PhoneNumber)
+
+                        }
+                    </td>
+
+                </tr>
+            }
+        }
+    </tbody>
+</table>

@@ -1,0 +1,71 @@
+﻿@model DebReg.Web.Areas.TournamentManagement.Models.PostPaymentsViewModel
+@{
+    ViewBag.Title = Resources.TournamentManagement.Finance.PostPayments.Strings.Title;
+    Html.RenderPartial("OrganizationDetailsDialogPartial");
+}
+
+<h2>@Resources.TournamentManagement.Finance.PostPayments.Strings.Heading</h2>
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+@using (Html.BeginForm("PostPayments", "Finance", FormMethod.Post, new { @class = "" })) {
+    <table class="table table-condensed table-bordered table-striped">
+        <tr>
+            <th>@Resources.TournamentManagement.Models.PostPaymentsViewModel.Strings.SearchTerm</th>
+            <th colspan="3">@Resources.Models.BookingRecord.Strings.Date</th>
+            <th colspan="2">@Resources.Models.BookingRecord.Strings.Value</th>
+            <th colspan="4">@Resources.Models.BookingRecord.Strings.Note</th>
+            <th />
+        </tr>
+        <tr>
+            <td>
+                @Html.EditorFor(model => model.SearchTerm, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SearchTerm, "", new { @class = "text-danger" })
+            </td>
+            <td colspan="3">
+                @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } } )
+                @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+            </td>
+            <td colspan="2">
+                @Html.EditorFor(model => model.Value, new { htmlAttributes = new { @class = "form-control text-right" } } )
+                @Html.ValidationMessageFor(model => model.Value, "", new { @class = "text-danger" })
+            </td>
+            <td colspan="4">
+                @Html.TextAreaFor(model => model.Note, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Note, "", new { @class = "text-danger" })
+            </td>
+            <td colspan="9">
+                <button class="btn btn-success" type="submit" name="validate" value="True">
+                    <span class="glyphicon glyphicon-ok"></span>
+                </button>
+            </td>
+        </tr>
+        @if (Model.Payments !=null && Model.Payments.Count > 0) {
+            <tr>
+                <th rowspan="2">@Resources.Models.Organization.Strings.Name</th>
+                <th rowspan="2">@Resources.Models.BookingRecord.Strings.Date</th>
+                <th rowspan="2">@Resources.Models.BookingRecord.Strings.Value</th>
+                <th rowspan="2">@Resources.Models.BookingRecord.Strings.Note</th>
+                <th rowspan="2" />
+                <th rowspan="2" class="text-center">@Resources.Strings.BalanceCaption</th>
+                <th colspan="2" class="text-center">@Resources.Strings.TeamsCaption</th>
+                <th colspan="2" class="text-center">@Resources.Strings.AdjudicatorsCaption</th>
+                <th rowspan="2" />
+            </tr>
+            <tr>
+                <th class="text-center">@Resources.Strings.GrantedCaption</th>
+                <th class="text-center">@Resources.Strings.PaidCaption</th>
+                <th class="text-center">@Resources.Strings.GrantedCaption</th>
+                <th class="text-center">@Resources.Strings.PaidCaption</th>
+            </tr>
+            for (int i = Model.Payments.Count - 1; i >= 0; i--) {
+                @Html.EditorFor(model => model.Payments[i])
+            }
+        }
+    </table>
+    <p>
+        <button class="btn btn-danger" type="submit" name="post" value="True">
+            @Resources.TournamentManagement.Finance.PostPayments.Strings.PostPaymentsButtonCaption
+        </button>
+    </p>
+}
+

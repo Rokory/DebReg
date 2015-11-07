@@ -1,0 +1,103 @@
+﻿@model DebReg.Web.Models.UserPropertyValueViewModel
+
+@{ var labelAttributes = new { @class = "control-label col-md-2" }; }
+
+@Html.HiddenFor(model => model.UserPropertyId)
+@Html.HiddenFor(model => model.Type)
+@Html.HiddenFor(model => model.Min)
+@Html.HiddenFor(model => model.Max)
+
+
+@switch (Model.Type)
+{
+    case DebReg.Models.PropertyType.Boolean:
+        @Html.LabelFor(model => model.BooleanValue, Model.Name, labelAttributes)
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.BooleanValue, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.BooleanValue, "", new { @class = "text-danger" })
+            <div class="text-muted">@Model.Description</div>
+        </div>
+        break;
+    case DebReg.Models.PropertyType.Int:
+        @Html.LabelFor(model => model.IntValue, Model.Name, labelAttributes)
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.IntValue, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.IntValue, "", new { @class = "text-danger" })
+            <div class="text-muted">@Model.Description</div>
+        </div>
+        break;
+    case DebReg.Models.PropertyType.Decimal:
+        @Html.LabelFor(model => model.DecValue, Model.Name, labelAttributes)
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.DecValue, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.DecValue, "", new { @class = "text-danger" })
+            <div class="text-muted">@Model.Description</div>
+        </div>
+        break;
+    case DebReg.Models.PropertyType.Date:
+        @Html.LabelFor(model => model.DateTimeValue, Model.Name, labelAttributes)
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.DateTimeValue, "Date", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.DateTimeValue, "", new { @class = "text-danger" })
+            <div class="text-muted">@Model.Description</div>
+        </div>
+        break;
+    case DebReg.Models.PropertyType.String:
+        @Html.LabelFor(model => model.StringValue, Model.Name, labelAttributes)
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.StringValue, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.StringValue, "", new { @class = "text-danger" })
+            <div class="text-muted">@Model.Description</div>
+        </div>
+        break;
+    case DebReg.Models.PropertyType.Text:
+        @Html.LabelFor(model => model.StringValue, Model.Name, labelAttributes)
+        <div class="col-md-10">
+            @Html.TextAreaFor(model => model.StringValue, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.StringValue, "", new { @class = "text-danger" })
+            <div class="text-muted">@Model.Description</div>
+        </div>
+        break;
+    case DebReg.Models.PropertyType.PhoneNumber:
+        @Html.LabelFor(model => model.PhoneValue, Model.Name, labelAttributes)
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.PhoneValue, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.PhoneValue, "", new { @class = "text-danger" })
+            <div class="text-muted">@Model.Description</div>
+        </div>
+        break;
+    case DebReg.Models.PropertyType.EMail:
+        @Html.LabelFor(model => model.EmailValue, Model.Name, labelAttributes)
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.EmailValue, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.EmailValue, "", new { @class = "text-danger" })
+            <div class="text-muted">@Model.Description</div>
+        </div>
+        break;
+    case DebReg.Models.PropertyType.SinglePerson:
+        // TODO: Implement person finder
+        break;
+    default:
+        if (Model.SelectOptions != null)
+        {
+            var selectList = from option in Model.SelectOptions
+            select new SelectListItem
+            {
+                Text = option.Value,
+                Value = option.Key
+            };
+            @Html.LabelFor(model => model.SingleSelectValue, Model.Name, labelAttributes)
+            <div class="col-md-10">
+                @Html.DropDownListFor(
+                        model => model.SingleSelectValue,
+                        selectList,
+                        Resources.Shared.UserPropertyValueViewModel.Strings.SelectListDefault,
+                        new { @class = "form-control" }
+                    )
+                @Html.ValidationMessageFor(model => model.SingleSelectValue, "", new { @class = "text-danger" })
+                <div class="text-muted">@Model.Description</div>
+            </div>
+        }
+        break;
+}
+

@@ -1,0 +1,33 @@
+﻿@model DebReg.Models.User
+@{
+    ViewBag.Title = Resources.User.ConfirmEMail.Strings.Title;
+}
+
+
+<h2>@Resources.User.ConfirmEMail.Strings.Heading</h2>
+
+@if (Model != null)
+{
+    <p>
+        @Resources.User.ConfirmEMail.Strings.Body
+    </p>
+    <p>
+        <strong>@Model.Email</strong>
+    </p>
+    <p>
+        @Html.ActionLink(Resources.User.ConfirmEMail.Strings.LoginLinkLabel, "Login")
+    </p>
+}
+
+@if (Model == null)
+{
+    <p>
+        @Html.ValidationSummary("", new { @class = "bg-danger"})
+    </p>
+    <p>
+        @Resources.User.ConfirmEMail.Strings.ErrorsBody
+    </p>
+    <p>
+        @Html.ActionLink(Resources.User.ConfirmEMail.Strings.DisplayUserLinkLabel, "Display")
+    </p>
+}

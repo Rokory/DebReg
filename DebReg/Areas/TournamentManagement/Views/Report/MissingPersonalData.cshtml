@@ -1,0 +1,30 @@
+﻿@model IEnumerable<DebReg.Web.Areas.TournamentManagement.Models.MissingPersonalDataViewModel>
+@{
+    ViewBag.Title = Resources.TournamentManagement.Report.MissingRegistrations.Strings.Title;
+}
+
+<h2>@Resources.TournamentManagement.Report.MissingPersonalData.Strings.Heading</h2>
+<hr />
+<table class="table table-condensed table-striped">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.User.LastName)</th>
+            <th>@Html.DisplayNameFor(model => model.User.FirstName)</th>
+            <th>@Html.DisplayNameFor(model => model.User.Email)</th>
+            <th>@Html.DisplayNameFor(model => model.User.PhoneNumber)</th>
+            <th>@Html.DisplayNameFor(model => model.Organization.Name)</th>
+        </tr> 
+    </thead>
+    <tbody>
+        @foreach (var viewModel in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(model => viewModel.User.LastName)</td>
+                <td>@Html.DisplayFor(model => viewModel.User.FirstName)</td>
+                <td>@Html.DisplayFor(model => viewModel.User.Email)</td>
+                <td>@Html.DisplayFor(model => viewModel.User.PhoneNumber)</td>
+                <td>@Html.DisplayFor(model => viewModel.Organization.Name) </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,14 @@
+﻿@model DebReg.Web.Models.UserPropertyValueViewModel
+
+@switch (Model.Type)
+{
+    case DebReg.Models.PropertyType.Date:
+        if (Model.DateTimeValue != null)
+        {
+            @Html.DisplayFor(model => model.DateTimeValue, "Date")
+        }
+        break;
+    default:
+        @Html.DisplayFor(model => model.DisplayValue)
+        break;
+}

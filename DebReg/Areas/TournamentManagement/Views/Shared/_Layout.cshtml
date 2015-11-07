@@ -1,0 +1,109 @@
+﻿@using System.Security.Claims
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <!-- HTML 4.x -->
+    <meta charset="utf-8">
+    <!-- HTML5 -->
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+    <!-- jQueryUI -->
+    @Scripts.Render("~/bundles/jqueryui")
+    @Styles.Render("~/Content/themes/base/css")
+
+    <!-- Bootstrap -->
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Content/debreg.css" rel="stylesheet" />
+
+
+    <title>
+        @Resources.Strings.AppTitle
+        @*@ViewBag.Title*@
+    </title>
+</head>
+<body>
+
+    <nav class="navbar navbar-default navbar-inverse">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("DebReg", "Index", "Home", null, new { @class = "navbar-brand" })
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                        @* Tournament Details *@
+                        
+                        <li>@Html.ActionLink(Html.Encode(Resources.TournamentManagement.Strings.TournamentLink), "Index", "Home")</li>
+                        
+                        @* Organization Approval *@
+                        
+                        @if (HttpContext.Current.User.IsInRole("OrganizationApprover")) {
+                            <li>@Html.ActionLink(Html.Encode(Resources.TournamentManagement.Strings.OrganizationsLink), "Index", "Organization")</li>
+                        }
+
+                        @* Slot Management *@
+
+                        @if (HttpContext.Current.User.IsInRole("SlotManager")) { 
+                            <li>@Html.ActionLink(Html.Encode(Resources.TournamentManagement.Strings.SlotsLink), "Index", "Slot")</li>
+                        }
+                        
+                        @* Financial Management *@
+                        @if (HttpContext.Current.User.IsInRole("FinanceManager")) {
+                            <li>@Html.ActionLink(Resources.TournamentManagement.Strings.FinanceLink, "Index", "Finance")</li>
+                        }
+                        
+                        @* Reports *@
+                        @if (HttpContext.Current.User.IsInRole("OrganizationApprover")
+                            || HttpContext.Current.User.IsInRole("SlotManager")
+                            || HttpContext.Current.User.IsInRole("FinanceManager")
+                            || HttpContext.Current.User.IsInRole("ReportViewer"))
+                        {
+                            <li>@Html.ActionLink(Resources.TournamentManagement.Strings.ReportsLink, "Index", "Report")</li>
+                        }
+
+                        @* Back To Main Area *@
+
+                        <li>@Html.ActionLink(Html.Encode(Resources.TournamentManagement.Strings.MainLink), "Index", "Home", new { Area = "" }, null)</li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    <nav class="navbar navbar-default navbar-fixed-bottom">
+        <div class="container">
+            <p class="navbar-text">Brought to you by <a href="http://www.viennaeudc.eu">Vienna EUDC 2015</a>.</p>
+            <p class="navbar-text">Questions or problems? <a href="mailto:registration@viennaeudc.eu">registration@viennaeudc.eu</a></p>
+            <p class="navbar-text">DebReg @ViewContext.Controller.GetType().Assembly.GetName().Version (c) 2015 by Roman Korecky</p>
+        </div>
+    </nav>
+
+    <script src="~/Scripts/formatDateTime.js"></script>
+    <script src="~/Scripts/datePicker.js"></script>
+</body>
+</html>

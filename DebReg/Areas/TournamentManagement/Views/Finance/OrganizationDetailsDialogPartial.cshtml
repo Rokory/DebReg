@@ -1,0 +1,19 @@
+﻿<div id="organizationDetailsDialog">
+    <div id="organizationDetails"></div>
+</div>
+<script>
+    var organizationDetailsDialog = $("#organizationDetailsDialog");
+    organizationDetailsDialog.dialog({
+        autoOpen: false,
+        height: "auto",
+        width: "auto"
+    });
+    var displayOrganizationDetails = function (id) {
+        organizationDetailsDialog.dialog("close");
+        $("#organizationDetails").html("");
+        $.get("/TournamentManagement/Finance/OrganizationDetails?id=" + id, function (data) {
+            $("#organizationDetails").html(data);
+            organizationDetailsDialog.dialog("open");
+        })
+    };
+</script>

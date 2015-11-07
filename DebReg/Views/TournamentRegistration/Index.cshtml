@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewBag.Title = Resources.TournamentRegistration.Index.Strings.Title;
+}
+
+<h2>@Html.Encode(Resources.TournamentRegistration.Index.Strings.Heading)</h2>
+<hr />
+@Html.Action("GetFutureTournamentsPartial", "TournamentRegistration")
+@Html.Action("GetRegistrationsPartial", "TournamentRegistration")
+@Html.Action("GetSpeakerRegistrationsPartial", "TournamentRegistration")
+@Html.Action("GetAdjudicatorRegistrationsPartial", "TournamentRegistration")
+
+
+

@@ -1,0 +1,237 @@
+﻿@* @model DebReg.Web.Models.FindUserViewModel *@
+
+
+@*<!-- test code -->
+    <script>
+        var dialog = new findUsersDialog(null, true);
+    </script>
+    <button onclick="dialog.show()">Find users</button>
+<!-- end test code-->*@
+
+<div id="findUsersDialog" style="display:none">
+    <div class="panel panel-default">
+        <div class="panel panel-heading">
+            <form class="form-horizontal">
+
+                <!-- SEARCHBOX -->
+
+                <div class="input-group">
+                    <input id="SearchTerm" class="form-control" placeholder="@Resources.Shared.FindUser.Strings.FindPlaceHolder" autocomplete="off" />
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" id="find">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true" />
+                        </button>
+                    </span>
+                </div>
+
+                <div>
+                    <!-- No search results -->
+                    <span class="text-warning noResults">
+                        @Resources.Shared.FindUser.Strings.NoResults
+                    </span>
+
+                    <!-- Enter more characters -->
+                    <span class="text-warning shortSearchTerm">
+                        @Resources.Shared.FindUser.Strings.ShortSearchTerm
+                    </span>
+
+                    <!-- Results found -->
+                    <span class="results">
+                        @Resources.Shared.FindUser.Strings.SelectUserPrompt
+                    </span>
+
+                    <span class="newUser results noResults">
+                        @Resources.Shared.FindUser.Strings.ClickNewUserLink
+                    </span>
+                </div>
+
+                <div class="text-right results noResults newUser">
+                    <a href="#" id="newUserLink">@Resources.Shared.FindUser.Strings.NewUserLink</a>
+                    
+                </div>
+            </form>
+        </div>
+
+        <!-- RESULT LIST -->
+
+        <div class="panel-body">
+
+            <!-- Search results -->
+            <div class="table-responsive results">
+                <table class="table table-hover table-condensed" id="resultUsers">
+                    <tbody data-bind="foreach: users">
+                        <tr data-bind="click: $parent.selectUser" style="cursor:pointer">
+                            <td data-bind="text: firstname"></td>
+                            <td data-bind="text: lastname"></td>
+                            <td data-bind="text: eMail"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel-footer moreResults text-danger" style="display: none">
+            @Resources.Shared.FindUser.Strings.MoreResults
+    </div>
+</div>
+</div>
+
+<script>
+    function findUsersDialog(callback, callbackParameter, newUserLink) {
+        var _this = this;
+        this.callback = callback;
+        this.callbackParameter = callbackParameter;
+        this.newUserLink = newUserLink;
+
+
+
+        // configure model
+
+        this.result = {
+            users: ko.observableArray(),
+            selectUser: function (user) {
+            findUsersDialogDiv.dialog('close');
+            if (isFunction(_this.callback)) {
+                _this.callback(user, _this.callbackParameter);
+            }
+
+        }
+    };
+        
+        var findUsersDialogDiv = document.getElementById('findUsersDialog');
+        ko.cleanNode(findUsersDialogDiv);
+        ko.applyBindings(this.result, findUsersDialogDiv);
+
+        // configure dialog
+
+        findUsersDialogDiv = $("#findUsersDialog");
+        findUsersDialogDiv.dialog({
+            autoOpen: false,
+            width: "80%",
+            height: "auto",
+            modal: true,
+            position: {at: "center top"}
+        });
+
+
+        // find to enter
+
+        $('SearchTerm').keypress(function (e) {
+            if (e.keyCode == 13) {
+                $('find').click();
+            }
+        });
+
+
+        // function to be called from external code to display dialog
+
+        this.show = function () {
+
+            // clear text box
+            $("#SearchTerm").val("");
+
+            // hide or show new user links
+
+            $(".newUser").show();
+            $('#newUserLink').attr('href', _this.newUserLink);
+            if (_this.newUserLink || _this.newUserLink === '') {
+                $(".newUser").hide();
+            }
+
+            // hide results and noresults
+
+            $(".results").hide();
+            $(".noResults").hide();
+            $(".moreResults").hide();
+            $(".shortSearchTerm").hide();
+
+            // configure click event handler for search
+
+            $("#find").click(function (e) {
+                e.preventDefault();
+
+                var searchTerm = $("#SearchTerm").val();
+
+                if (searchTerm.length < 3) {
+                    $(".shortSearchTerm").show();
+                    $(".results").hide();
+                    $(".noResults").hide();
+                    return;
+                }
+
+                $(".shortSearchTerm").hide();
+
+                findUsers(searchTerm);
+            });
+
+            // show dialog
+
+            findUsersDialogDiv.dialog("open");
+
+        }
+
+
+
+        // sends AjaxRequest using httpMethod and calls back with result
+        function sendAjaxRequest(httpMethod, callback, term) {
+            term = encodeURIComponent(term);
+            $.ajax("/api/User?searchTerm=" + term, {
+                type: httpMethod, success: callback
+            });
+        }
+
+        // finds Users and fills model with the result
+
+        function findUsers(searchTerm) {
+            sendAjaxRequest(
+                "GET",
+                function (data) {
+                    $(".moreResults").hide();
+
+                    // Clear model
+
+                    _this.result.users.removeAll();
+
+                    // No results found
+
+                    if (data.totalResults == 0) {
+                        $(".results").hide();
+                        $(".noResults").show();
+                    }
+
+                    // Results found
+
+                    if (data.totalResults > 0) {
+                        $(".noResults").hide();
+                        $(".results").show();
+                        
+                        this.selectUser = function (user) {
+                            findUsersDialogDiv.dialog('close');
+                            if (isFunction(callback)) {
+                                callback(user, callbackParameter);
+                            }
+
+                        }
+
+                        // fill model
+                        for (var i = 0; i < data.results.length; i++) {
+                            _this.result.users.push(data.results[i]);
+                        }
+
+                        if (data.totalResults > data.results.length) {
+                            $(".moreResults").show();
+                        }
+                    }
+                },
+                searchTerm
+            );
+        }
+
+
+        function isFunction(functionToCheck) {
+            var getType = {};
+            return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
+        }
+
+
+    }
+</script>

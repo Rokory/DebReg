@@ -1,0 +1,88 @@
+﻿@model IEnumerable<DebReg.Models.Team>
+
+@{
+	ViewBag.Title = Resources.TournamentManagement.Report.Teams.Strings.Title;
+}
+
+<h2>@Resources.TournamentManagement.Report.Teams.Strings.Heading</h2>
+<hr />
+
+@if (Model.Count() > 0)
+{
+	var teamSize = Model.First().Tournament.TeamSize;
+	<table class="table table-striped table-condensed">
+		<tr>
+			<th rowspan="1">
+				@Html.DisplayNameFor(model => model.Organization.Name)
+			</th>
+			<th rowspan="1">
+				@Html.DisplayNameFor(model => model.Name)
+			</th>
+			<th colspan="4">
+				@Html.DisplayNameFor(model => model.Speaker)
+			</th>
+		</tr>
+
+		@foreach (var item in Model)
+		{
+			var rowSpan = teamSize == 0 ? 1 : teamSize;
+			<tr>
+				<td rowspan="@rowSpan">
+					@Html.DisplayFor(model => item.Organization.Name)
+				</td>
+				<td rowspan="@rowSpan">
+					@Html.DisplayFor(model => item.Name)
+				</td>
+				@{
+					var speaker = item.Speaker.FirstOrDefault();
+					if (speaker == null)
+					{
+						speaker = new DebReg.Models.User();
+					}
+					<td>
+						@Html.DisplayFor(model => speaker.LastName)
+					</td>
+					<td>
+						@Html.DisplayFor(model => speaker.FirstName)
+					</td>
+					<td>
+						@Html.DisplayFor(model => speaker.Email)
+					</td>
+					<td>
+						@Html.DisplayFor(model => speaker.PhoneNumber)
+					</td>
+				}
+			</tr>
+			for (int i = 1; i < rowSpan; i++)
+			{
+				if (item.Speaker.Count > i)
+				{
+					speaker = item.Speaker[i];
+				}
+				else
+				{
+					speaker = new DebReg.Models.User();
+				}
+				<tr>
+					<td>
+						@Html.DisplayFor(model => speaker.LastName)
+					</td>
+					<td>
+						@Html.DisplayFor(model => speaker.FirstName)
+					</td>
+					<td>
+						@Html.DisplayFor(model => speaker.Email)
+					</td>
+					<td>
+						@Html.DisplayFor(model => speaker.PhoneNumber)
+					</td>
+				</tr>
+			}
+		}
+	</table>
+
+}
+else
+{
+	@Resources.TournamentManagement.Report.Teams.Strings.NoTeams
+}

@@ -1,0 +1,98 @@
+﻿@model DebReg.Web.Models.TournamentOrganizationRegistrationViewModel
+@{
+    Decimal balance = Model.Bookings.Sum(b => b.Value * (b.Credit ? 1 : -1));
+    String bgBalance = "";
+    if (balance > 0) {
+        bgBalance = "bg-success";
+    }
+    if (balance < 0) {
+        bgBalance = "bg-danger";
+    }
+}
+<table class="table table-bordered table-striped table-condensed">
+    <thead>
+        <tr>
+            <th rowspan="2">@Resources.Models.BookingRecord.Strings.Date</th>
+            <th>@Resources.Models.BookingRecord.Strings.ProductName</th>
+            <th class="text-right">@Resources.Models.BookingRecord.Strings.Quantity</th>
+            <th class="text-right">@Resources.Models.BookingRecord.Strings.Price</th>
+            <th rowspan="2" class="text-right">@Resources.TournamentRegistration.Display.Strings.DebitLabel</th>
+            <th rowspan="2" class="text-right">@Resources.TournamentRegistration.Display.Strings.CreditLabel</th>
+            <th rowspan="2">@Resources.Models.BookingRecord.Strings.PaymentsDueDate</th>
+        </tr>
+        <tr>
+            <th colspan="3">@*Resources.Models.BookingRecord.Strings.Note*@</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var booking in Model.Bookings.OrderBy(b => b.Date)) {
+            <tr>
+                <td rowspan="2">
+                    @Html.DisplayFor(model => booking.Date, "Date")
+                </td>
+                @if (booking.Quantity != 0 && !String.IsNullOrEmpty(booking.ProductName)) {
+                    <td>@Html.DisplayFor(model => booking.ProductName)</td>
+                    <td class="text-right">@Html.DisplayFor(model => booking.Quantity)</td>
+                    <td class="text-right">@Html.DisplayFor(model => model.Registration.Tournament.Currency.Symbol) &nbsp;@Html.DisplayFor(model => booking.Price)</td>
+                }
+                else {
+                    <td colspan="3" />
+                }
+                <td rowspan="2" class="text-right">
+                    @if (!booking.Credit) {
+                        <div>
+                            @Html.DisplayFor(model => model.Registration.Tournament.Currency.Symbol)&nbsp;@Html.DisplayFor(model => booking.Value)
+                        </div>
+                    }
+                </td>
+                <td rowspan="2" class="text-right">
+                    @if (booking.Credit) {
+                        <div>
+                            @Html.DisplayFor(model => model.Registration.Tournament.Currency.Symbol)&nbsp;@Html.DisplayFor(model => booking.Value)
+                        </div>
+                    }
+                </td>
+                <td rowspan="2">
+                    @if (booking.PaymentsDueDate != null) {
+                        @Html.DisplayFor(model => booking.PaymentsDueDate, "Date")
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">@Html.DisplayFor(model => booking.Note)</td>
+            </tr>
+        }
+        <tr>
+            @{
+                Decimal debitTotal = Model.Bookings
+                    .Where(b => !b.Credit)
+                    .Sum(b => b.Value);
+                Decimal creditTotal = Model.Bookings
+                    .Where(b => b.Credit)
+                    .Sum(b => b.Value);
+            }
+            <td />
+            <th colspan="3"><strong>@Resources.TournamentRegistration.Display.Strings.TotalLabel</strong></th>
+            <td class="text-right">
+                <strong>@Html.DisplayFor(model => model.Registration.Tournament.Currency.Symbol)&nbsp;@Html.DisplayFor(model => debitTotal)</strong>
+            </td>
+            <td class="text-right">
+                <strong>@Html.DisplayFor(model => model.Registration.Tournament.Currency.Symbol)&nbsp;@Html.DisplayFor(model => creditTotal)</strong>
+            </td>
+        </tr>
+        <tr>
+            <td />
+            <th colspan="3">
+                @Resources.TournamentRegistration.Strings.Balance
+                
+                @*(@Html.DisplayNameFor(model => model.Registration.Tournament.PaymentsDueDate)
+                @Html.DisplayFor(model => model.Registration.Tournament.PaymentsDueDate, "Date"))*@
+                
+            </th>
+            <td colspan="2" class="@bgBalance text-right">
+                <strong>@Html.DisplayFor(model => model.Registration.Tournament.Currency.Symbol) &nbsp;@Html.DisplayFor(model => balance)</strong>
+            </td>
+        </tr>
+    </tbody>
+</table>
+

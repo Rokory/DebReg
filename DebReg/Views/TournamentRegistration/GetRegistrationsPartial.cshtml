@@ -1,0 +1,184 @@
+﻿@model IEnumerable<DebReg.Web.Models.TournamentOrganizationRegistrationViewModel>
+
+@if (Model != null) {
+	if (Model.Count() > 0) {
+		<h3>@Resources.TournamentRegistration.GetRegistrationsPartial.Strings.YourRegistrationsHeading</h3>
+	
+
+		<table class="table table-bordered table-striped">
+			<tr>
+				<th>
+					@Html.DisplayNameFor(model => model.Registration.Tournament.Name)
+				</th>
+				<th>
+					@Resources.TournamentRegistration.GetRegistrationsPartial.Strings.Checklist
+				</th>
+			</tr>
+
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td style="vertical-align:top">
+						@if (item.Registration.Tournament != null)
+						{
+							@Html.ActionLink(item.Registration.Tournament.Name, "Display", new { organizationId = item.Registration.OrganizationId, tournamentId = item.Registration.TournamentId })
+						}
+					</td>
+					<td>
+						<table class="table table-condensed">
+							<tbody>
+								<tr>
+									<td>
+										@if (item.Registration.OrganizationStatus == DebReg.Models.OrganizationStatus.Unknown
+											|| item.Registration.OrganizationStatusDraft)
+										{
+											<span class="glyphicon glyphicon-unchecked"></span>
+										}
+										@if (item.Registration.OrganizationStatus == DebReg.Models.OrganizationStatus.Approved
+											&& !item.Registration.OrganizationStatusDraft)
+										{
+											<span class="bg-success">
+												<span class="glyphicon glyphicon-check"></span>
+											</span>
+										}
+										@if (item.Registration.OrganizationStatus == DebReg.Models.OrganizationStatus.Dropped
+											&& !item.Registration.OrganizationStatusDraft)
+										{
+											<span class="bg-danger">
+												<span class="glyphicon glyphicon-remove"></span>
+											</span>
+										}
+									</td>
+									<td>
+										@Resources.TournamentRegistration.GetRegistrationsPartial.Strings.OrganizationStatus
+										@if (!item.Registration.OrganizationStatusDraft)
+										{
+											@Html.DisplayFor(model => item.Registration.OrganizationStatus)
+										}
+										else
+										{
+											@DebReg.Models.OrganizationStatus.Unknown
+										}
+									</td>
+								</tr>
+								@if (!item.Registration.OrganizationStatusDraft && item.Registration.OrganizationStatus == DebReg.Models.OrganizationStatus.Approved)
+								{
+									<tr>
+										<td>
+											@if (item.Registration.TeamsGranted > 0 || item.Registration.AdjudicatorsGranted > 0)
+											{
+												<span class="bg-success">
+													<span class="glyphicon glyphicon-check"></span>
+												</span>
+											}
+											else
+											{
+												<span class="glyphicon glyphicon-unchecked"></span>
+											}
+
+										</td>
+										<td>
+											@Resources.TournamentRegistration.GetRegistrationsPartial.Strings.TeamsGranted
+											@Html.DisplayFor(model => item.Registration.TeamsGranted)
+											<br />
+											@Resources.TournamentRegistration.GetRegistrationsPartial.Strings.AdjudicatorsGranted
+											@Html.DisplayFor(model => item.Registration.AdjudicatorsGranted)
+										</td>
+
+									</tr>
+								}
+								@if (item.Registration.TeamsGranted > 0 || item.Registration.AdjudicatorsGranted > 0)
+								{
+									<tr>
+										<td>
+											@if (item.Balance < 0)
+											{
+												<span class="bg-danger">
+													<span class="glyphicon glyphicon-unchecked"></span>
+												</span>
+											}
+											else
+											{
+												<span class="bg-success">
+													<span class="glyphicon glyphicon-check"></span>
+												</span>
+											}
+										</td>
+										<td>
+											@Html.ActionLink(Resources.TournamentRegistration.GetRegistrationsPartial.Strings.Balance, "Display", new { organizationId = item.Registration.OrganizationId, tournamentId = item.Registration.TournamentId, tab="account" })
+											@Html.DisplayFor(model => item.Balance)
+										</td>
+
+									</tr>
+								}
+								@if (item.Registration.TeamsPaid > 0 || item.Registration.AdjudicatorsPaid > 0)
+								{
+									<tr>
+										<td>
+											@if (item.TeamsCompleted >= item.Registration.TeamsPaid
+												&& item.AdjudicatorsCompleted >= item.Registration.AdjudicatorsPaid)
+											{
+												<span class="bg-success">
+													<span class="glyphicon glyphicon-check"></span>
+												</span>
+											}
+											else
+											{
+												<span class="bg-danger">
+													<span class="glyphicon glyphicon-unchecked"></span>
+												</span>
+											}
+										</td>
+										<td>
+											@Html.ActionLink(Resources.TournamentRegistration.GetRegistrationsPartial.Strings.RegisterSpeakersAndAdjudicators, "Display", new { organizationId = item.Registration.OrganizationId, tournamentId = item.Registration.TournamentId, tab = "persons" })
+											
+										</td>
+
+									</tr>
+								}
+								@if (item.TeamsCompleted > 0 || item.AdjudicatorsCompleted > 0)
+								{
+									<tr>
+										<td>
+											@if (item.IncompleteUsers.Count == 0)
+											{
+												<span class="bg-success">
+													<span class="glyphicon glyphicon-check"></span>
+												</span>
+											}
+											else
+											{
+												<span class="bg-danger">
+													<span class="glyphicon glyphicon-unchecked"></span>
+												</span>
+											}
+										</td>
+										<td>
+											@if (item.IncompleteUsers.Count == 0)
+											{
+												@Resources.TournamentRegistration.GetRegistrationsPartial.Strings.PersonalDataEntered
+											}
+											else
+											{   @Resources.TournamentRegistration.GetRegistrationsPartial.Strings.PersonalDataMissing
+												<table class="table">
+													@foreach (var user in item.IncompleteUsers)
+													{
+														<tr>
+															<td>@Html.DisplayFor(model => user.FirstName)</td>
+															<td>@Html.DisplayFor(model => user.LastName)</td>
+															<td>@Html.DisplayFor(model => user.Email)</td>
+														</tr>
+													}
+												</table>
+											}
+										</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					</td>
+				</tr>
+			}
+		</table>
+	}
+}

@@ -1,0 +1,50 @@
+﻿@model IEnumerable<DebReg.Web.Models.AdjudicatorRegistrationViewModel>
+
+@if (Model.Count() > 0) {
+    <h3>@Resources.TournamentRegistration.GetAdjudicatorRegistrationsPartial.Strings.Heading</h3>
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Adjudicator.Tournament)</th>
+                <th></th>
+                <th></th>
+                <th>@Html.DisplayNameFor(model => model.Adjudicator.Organization)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var adjudicatorRegistration in Model) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(model => adjudicatorRegistration.Adjudicator.Tournament.Name)
+                    </td>
+                    <td>
+                        @if (adjudicatorRegistration.PersonalDataComplete)
+                        {
+                            <span class="bg-success"><span class="glyphicon glyphicon-check"></span></span>
+                        }
+                        else
+                        {
+                            <span class="bg-danger">
+                                <span class="glyphicon glyphicon-unchecked"></span>
+                            </span>
+                        }
+                    </td>
+                    <td>
+                        @if (!adjudicatorRegistration.PersonalDataComplete)
+                        {
+                            <div class="bg-danger">
+                                <strong>@Resources.TournamentRegistration.Strings.MissingPersonalData</strong>
+                            </div>
+                        }
+                        @Html.ActionLink(Resources.TournamentRegistration.Strings.EditUserDataLinkCaption, "Display", "User", new { tournamentId = adjudicatorRegistration.Adjudicator.TournamentId }, null)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(model => adjudicatorRegistration.Adjudicator.Organization.Name)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

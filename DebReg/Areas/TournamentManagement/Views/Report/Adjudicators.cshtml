@@ -1,0 +1,58 @@
+﻿@model IEnumerable<DebReg.Models.Adjudicator>
+
+@{
+    ViewBag.Title = Resources.TournamentManagement.Report.Adjudicators.Strings.Title;
+}
+
+<h2>@Resources.TournamentManagement.Report.Adjudicators.Strings.Heading</h2>
+<hr />
+@if (Model.Count() > 0)
+{
+    <table class="table table-striped table-condensed">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Organization.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User.PhoneNumber)
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => item.Organization.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.User.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.User.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.User.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.User.PhoneNumber)
+                </td>
+            </tr>
+        }
+    </table>
+
+}
+else
+{
+    @Resources.TournamentManagement.Report.Teams.Strings.NoTeams
+}
+
+

@@ -1,0 +1,100 @@
+﻿@model IEnumerable<DebReg.Models.TournamentOrganizationRegistration>
+@{
+    ViewBag.Title = Resources.TournamentManagement.Report.BillingAddresses.Strings.Title;
+}
+
+<h2>@Resources.TournamentManagement.Report.BillingAddresses.Strings.Heading</h2>
+<table class="table-condensed table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Resources.Models.TournamentOrganizationRegistration.Strings.BookingCode
+            </th>
+            <th>
+                @Resources.Models.Organization.Strings.Name
+            </th>
+            <th>
+                @Resources.Models.Organization.Strings.VATId
+            </th>
+            <th>
+                @Resources.Models.Address.Strings.StreetAddress1
+            </th>
+            <th>
+                @Resources.Models.Address.Strings.StreetAddress2
+            </th>
+            <th>
+                @Resources.Models.Address.Strings.PostalCode
+            </th>
+            <th>
+                @Resources.Models.Address.Strings.City
+            </th>
+            <th>
+                @Resources.Models.Address.Strings.Country
+            </th>
+            <th>
+                @Resources.Models.TournamentOrganizationRegistration.Strings.AdjucatorsGranted
+            </th>
+            <th>
+                @Resources.Models.TournamentOrganizationRegistration.Strings.AdjucatorsPaid
+            </th>
+            <th>
+                @Resources.Models.TournamentOrganizationRegistration.Strings.TeamsGranted
+            </th>
+            <th>
+                @Resources.Models.TournamentOrganizationRegistration.Strings.TeamsPaid
+            </th>
+        </tr>
+        
+    </thead>
+    <tbody>
+        @foreach (var registration in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(m => registration.BookingCode)
+                </td>
+                @if (registration.BilledOrganization != null)
+                {
+                    <td>
+                        @Html.DisplayFor(m => registration.BilledOrganization.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => registration.BilledOrganization.VatId)
+                    </td>
+                    if (registration.BilledOrganization.Address != null)
+                    {
+                        <td>
+                            @Html.DisplayFor(m => registration.BilledOrganization.Address.StreetAddress1)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => registration.BilledOrganization.Address.StreetAddress2)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => registration.BilledOrganization.Address.PostalCode)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => registration.BilledOrganization.Address.City)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => registration.BilledOrganization.Address.Country)
+                        </td>
+                    }
+
+                }
+                <td>
+                    @Html.DisplayFor(m => registration.AdjudicatorsGranted)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => registration.AdjudicatorsPaid)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => registration.TeamsGranted)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => registration.TeamsPaid)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

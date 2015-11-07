@@ -1,0 +1,51 @@
+﻿@model DebReg.Models.TournamentOrganizationRegistration
+
+@{
+    ViewBag.Title = Resources.TournamentRegistration.Delete.Strings.Title;
+}
+<h2>@Html.Encode(Resources.TournamentRegistration.Delete.Strings.Heading)</h2>
+<div>
+    <h3>@Html.Encode(Resources.TournamentRegistration.Delete.Strings.TournamentRegistrationHeading)</h3>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Tournament.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Tournament.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TeamsWanted)
+        </dt>
+    
+        <dd>
+            @Html.DisplayFor(model => model.TeamsWanted)
+        </dd>
+    
+        <dt>
+            @Html.DisplayNameFor(model => model.AdjudicatorsWanted)
+        </dt>
+    
+        <dd>
+            @Html.DisplayFor(model => model.AdjudicatorsWanted)
+        </dd>
+    
+        <dt>
+            @Html.DisplayNameFor(model => model.Notes)
+        </dt>
+    
+        <dd>
+            @Html.DisplayFor(model => model.Notes)
+        </dd>
+    
+    </dl>
+    
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+    
+        <div class="form-actions no-color">
+            <input type="submit" value="@Html.Encode(Resources.TournamentRegistration.Delete.Strings.DeleteButton)" class="btn btn-default" />
+        </div>
+    }
+</div>

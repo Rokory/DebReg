@@ -1,0 +1,53 @@
+﻿@model IEnumerable<DebReg.Models.Team>
+@{
+    ViewBag.Title = Resources.TournamentManagement.Report.Index.Strings.Title;
+}
+
+<h2>@Resources.TournamentManagement.Report.Index.Strings.Heading</h2>
+<hr />
+<dl>
+    <dt>
+        @Html.ActionLink(
+            Resources.TournamentManagement.Report.Index.Strings.TeamsHeading,
+            "Teams"
+        )
+    </dt>
+    <dd>@Resources.TournamentManagement.Report.Index.Strings.TeamsDescription</dd>
+    <dt>
+        @Html.ActionLink(
+            Resources.TournamentManagement.Report.Index.Strings.AdjudicatorsHeading,
+            "Adjudicators"
+        )
+
+    </dt>
+    <dd>@Resources.TournamentManagement.Report.Index.Strings.AdjudicatorsDescription</dd>
+    <dt>
+        @Html.ActionLink(
+            Resources.TournamentManagement.Report.Index.Strings.AttendeesHeading,
+            "Attendees"
+        )
+    </dt>
+    <dd>@Resources.TournamentManagement.Report.Index.Strings.AttendeesDescription</dd>
+    <dt>
+        @Html.ActionLink(
+            Resources.TournamentManagement.Report.Index.Strings.MissingRegistrationsHeading,
+            "MissingRegistrations"
+        )
+    </dt>
+    <dd>@Resources.TournamentManagement.Report.Index.Strings.MissingRegistrationsDescription</dd>
+    <dt>
+        @Html.ActionLink(
+            Resources.TournamentManagement.Report.Index.Strings.MissingPersonalDataHeading,
+            "MissingPersonalData"
+        )
+    </dt>
+    <dd>@Resources.TournamentManagement.Report.Index.Strings.MissingPersonalDataDescription</dd>
+    <dt>
+        @Html.ActionLink(
+            Resources.TournamentManagement.Report.Index.Strings.BillingAddressesHeading,
+            "BillingAddresses"
+        )
+    </dt>
+    <dd>@Resources.TournamentManagement.Report.Index.Strings.BillingAddressesDescription</dd>
+</dl>
+

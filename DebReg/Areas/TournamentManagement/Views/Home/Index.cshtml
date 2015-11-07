@@ -1,0 +1,94 @@
+﻿@model DebReg.Models.Tournament
+
+@{
+    ViewBag.Title = "Current Tournament";
+}
+
+<h2>Current Tournament</h2>
+<hr />
+<dl class="dl-horizontal">
+    <dt>
+        @Html.DisplayNameFor(model => model.Name)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.Name)
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.Location)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.Location)
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.HostingOrganization.Name)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.HostingOrganization.Name)
+    </dd>
+
+
+    <dt>
+        @Html.DisplayNameFor(model => model.Start)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.Start)
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.End)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.End)
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.RegistrationStart)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.RegistrationStart)
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.RegistrationEnd)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.RegistrationEnd)
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.AdjucatorSubtract)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.AdjucatorSubtract)
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.TeamSize)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.TeamSize)
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.TeamCap)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.TeamCap)
+    </dd>
+
+</dl>
+<p>
+    @Html.ActionLink("Switch Tournament", "SelectTournament")
+</p>

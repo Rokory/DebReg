@@ -1,0 +1,117 @@
+﻿@model List<DebReg.Web.Areas.TournamentManagement.Models.SlotAssignmentViewModel>
+
+@{
+    ViewBag.Title = Resources.TournamentManagement.Slot.UpdateSlots.Strings.Title;
+
+    var firstItem = Model.FirstOrDefault();
+    // var version = firstItem.Assignment.Version;
+    var teamCap = firstItem.Registration.Tournament.TeamCap;
+    var adjCap = firstItem.Registration.Tournament.AdjudicatorCap;
+}
+
+<h2>@Html.Encode(Resources.TournamentManagement.Slot.UpdateSlots.Strings.Heading)</h2>
+
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+@using (Html.BeginForm()) {
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th rowspan="2">
+                    @Html.Encode(Resources.Models.Organization.Strings.Name)
+                </th>
+                <th colspan="3" class="text-center">
+                    @Html.Encode(Resources.TournamentManagement.Slot.Strings.TeamsLabel)
+                    <span class="label label-info">
+                        @Html.Encode(Resources.TournamentManagement.Slot.Strings.CapLabel):
+                        @teamCap
+                    </span>
+                </th>
+                <th colspan="3" class="text-center">
+                    @Html.Encode(Resources.TournamentManagement.Slot.Strings.AdjudicatorsLabel)
+                    <span class="label label-info">
+                        @Html.Encode(Resources.TournamentManagement.Slot.Strings.CapLabel):
+                        @adjCap
+                    </span>
+                </th>
+                <th rowspan="2">
+                    @Resources.Models.TournamentOrganizationRegistration.Strings.LockAutoAssign
+                </th>
+            </tr>
+            <tr>
+                <th class="text-center">
+                    @Html.Encode(Resources.TournamentManagement.Slot.Strings.ConfirmedLabel)
+                    <span class="label label-success">
+                        @Model.Sum(a => a.Registration.TeamsPaid)
+                    </span>
+                </th>
+                <th class="text-center">
+                    @Html.Encode(Resources.TournamentManagement.Slot.Strings.WaitingLabel)
+                    <span class="label label-warning">
+                        @Model.Sum(a => a.Registration.TeamsWanted - a.Assignment.TeamsGranted)
+                    </span>
+                </th>
+                <th class="text-center">
+                    @Html.Encode(Resources.TournamentManagement.Slot.Strings.GrantedLabel)
+                    <span class="label label-default">
+                        @Model.Sum(a => a.Assignment.TeamsGranted)
+                    </span>
+                </th>
+
+                <th class="text-center">
+                    @Html.Encode(Resources.TournamentManagement.Slot.Strings.ConfirmedLabel)
+                    <span class="label label-success">
+                        @Model.Sum(a => a.Registration.AdjudicatorsPaid)
+                    </span>
+                </th>
+                <th class="text-center">
+                    @Html.Encode(Resources.TournamentManagement.Slot.Strings.WaitingLabel)
+                    <span class="label label-warning">
+                        @Model.Sum(a => a.Registration.AdjudicatorsWanted - a.Assignment.AdjucatorsGranted)
+                    </span>
+                </th>
+                <th class="text-center">
+                    @Html.Encode(Resources.TournamentManagement.Slot.Strings.GrantedLabel)
+                    <span class="label label-default">
+                        @Model.Sum(a => a.Assignment.AdjucatorsGranted)
+                    </span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Count(); i++) {
+                <tr>
+                    @Html.HiddenFor(model => model[i].Registration.TournamentId)
+                    @Html.HiddenFor(model => model[i].Registration.OrganizationId)
+                    @Html.HiddenFor(model => model[i].Assignment.VersionId)
+                    @Html.HiddenFor(model => model[i].Registration.BilledOrganizationId)
+                    @Html.HiddenFor(model => model[i].Registration.TeamsWanted)
+                    @Html.HiddenFor(model => model[i].Registration.AdjudicatorsWanted)
+
+                    <td>@Html.DisplayFor(model => model[i].Registration.Organization.Name)</td>
+                    <td>@Html.DisplayFor(model => model[i].Registration.TeamsPaid)</td>
+                    <td>@(Model[i].Registration.TeamsWanted - Model[i].Assignment.TeamsGranted)</td>
+                    <td>
+                        @Html.EditorFor(model => model[i].Assignment.TeamsGranted, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model[i].Assignment.TeamsGranted, "", new { @class = "text-danger" })
+                    </td>
+                    <td>@Html.DisplayFor(model => model[i].Registration.AdjudicatorsPaid)</td>
+                    <td>@(Model[i].Registration.AdjudicatorsWanted - Model[i].Assignment.AdjucatorsGranted)</td>
+                    <td>
+                        @Html.EditorFor(model => model[i].Assignment.AdjucatorsGranted, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model[i].Assignment.AdjucatorsGranted, "", new { @class = "text-danger" })
+                    </td>
+                    <td>
+                        @Html.EditorFor(model => model[i].Registration.LockAutoAssign, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model[i].Registration.LockAutoAssign, "", new { @class = "text-danger" })
+
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+    <p>
+        <button class="btn btn-default" type="submit">@Html.Encode(Resources.TournamentManagement.Slot.UpdateSlots.Strings.SaveDraftButtonCaption)</button>
+    </p>
+}

@@ -1,0 +1,112 @@
+﻿@model DebReg.Models.Tournament
+
+<div>
+    <div class="row">
+        <div class="col-sm-4 text-right">
+            <strong>@Html.DisplayNameFor(model => model.Name)</strong>
+        </div>
+
+        <div class="col-sm-8">
+            @Html.DisplayFor(model => model.Name)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4 text-right">
+            <strong>@Html.DisplayNameFor(model => model.Location)</strong>
+        </div>
+
+        <div class="col-sm-8">
+            @Html.DisplayFor(model => model.Location)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4 text-right">
+            <strong>@Html.DisplayNameFor(model => model.HostingOrganization)</strong>
+        </div>
+
+        <div class="col-sm-8">
+            @Html.DisplayFor(model => model.HostingOrganization.Name)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4 text-right">
+            <strong>@Html.DisplayNameFor(model => model.Start)</strong>
+        </div>
+        <div class="col-sm-8">
+            @Html.DisplayFor(model => model.Start)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4 text-right">
+            <strong>@Html.DisplayNameFor(model => model.End)</strong>
+        </div>
+
+        <div class="col-sm-8">
+            @Html.DisplayFor(model => model.End)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4 text-right">
+            <strong>@Html.DisplayNameFor(model => model.RegistrationStart)</strong>
+        </div>
+
+        <div class="col-sm-8">
+            @Html.DisplayFor(model => model.RegistrationStart)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4 text-right">
+            <strong>@Html.DisplayNameFor(model => model.RegistrationEnd)</strong>
+        </div>
+
+        <div class="col-sm-8">
+            @Html.DisplayFor(model => model.RegistrationEnd)
+        </div>
+    </div>
+    @*<div class="row">
+        <div class="col-sm-4 text-right">
+            <strong>@Html.DisplayNameFor(model => model.PaymentsDueDate)</strong>
+        </div>
+
+        <div class="col-sm-8">
+            @Html.DisplayFor(model => model.PaymentsDueDate)
+        </div>
+    </div>*@
+    <div class="row">
+        <div class="col-sm-4 text-right">
+            <strong>@Html.DisplayNameFor(model => model.AdjucatorSubtract)</strong>
+        </div>
+
+        <div class="col-sm-8">
+            @Html.DisplayFor(model => model.AdjucatorSubtract)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4 text-right">
+            <strong>@Html.DisplayNameFor(model => model.TeamSize)</strong>
+        </div>
+
+        <div class="col-sm-8">
+            @Html.DisplayFor(model => model.TeamSize)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4 text-right">
+            <strong>@Html.DisplayNameFor(model => model.TeamCap)</strong>
+        </div>
+
+        <div class="col-sm-8">
+            @Html.DisplayFor(model => model.TeamCap)
+        </div>
+    </div>
+</div>
+@if (! String.IsNullOrWhiteSpace(Model.TermsConditions)) {
+    <p>
+        @Html.DisplayFor(model => model.TermsConditions)    
+    </p>
+    <p>
+        <a href="@Model.TermsConditionsLink">
+            @Html.DisplayNameFor(model => model.TermsConditionsLink)
+        </a>
+    </p>
+}

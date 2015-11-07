@@ -1,0 +1,19 @@
+﻿@model DebReg.Models.TournamentOrganizationRegistration
+@{
+    ViewBag.Title = Resources.TournamentRegistration.UniversityRequired.Strings.Title;
+}
+
+<h2>@Html.Encode(Resources.TournamentRegistration.UniversityRequired.Strings.Heading)</h2>
+<p>
+    @Html.Encode(Resources.TournamentRegistration.UniversityRequired.Strings.BodyText)    
+</p>
+<p>
+    @Html.ActionLink(
+        Html.Encode(
+            Resources.TournamentRegistration.UniversityRequired.Strings.EditOrganizationLink), 
+            "Register", 
+            "Organization", 
+            new {organizationId = Model.OrganizationId, returnUrl = ViewBag.returnUrl },
+            null)
+</p>
+

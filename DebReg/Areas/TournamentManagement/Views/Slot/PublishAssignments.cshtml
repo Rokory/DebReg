@@ -1,0 +1,139 @@
+﻿@model DebReg.Web.Areas.TournamentManagement.Models.PublishSlotAssignmentsViewModel
+@{
+    ViewBag.Title = Resources.TournamentManagement.Slot.PublishAssignments.Strings.Title;
+}
+
+<h2>@Html.Encode(Resources.TournamentManagement.Slot.PublishAssignments.Strings.Heading)</h2>
+<hr />
+
+@if (Model.SlotAssignments.Count() < 1) {
+    <p>
+        @Html.Encode(Resources.TournamentManagement.Slot.Strings.NoRegistrations)
+    </p>
+}
+else {
+    using (Html.BeginForm()) {
+        <div class="form-group-sm">
+            @Html.LabelFor(model => model.PaymentsDueDate)
+            @Html.EditorFor(model => model.PaymentsDueDate, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.PaymentsDueDate, "", new { @class = "text-danger" })
+        </div>
+        <p>
+            @Html.Encode(Resources.TournamentManagement.Slot.PublishAssignments.Strings.Body)
+        </p>
+        <p>
+            <button type="submit" name="publish" value="true" class="btn btn-danger">@Html.Encode(Resources.Strings.YesButtonCaption)</button>
+            <button type="submit" name="publish" value="false" class="btn btn-success">@Html.Encode(Resources.Strings.NoButtonCaption)</button>
+        </p>
+    }
+    var firstItem = Model.SlotAssignments.FirstOrDefault();
+    var teamCap = firstItem.Registration.Tournament.TeamCap;
+    var adjCap = firstItem.Registration.Tournament.AdjudicatorCap;
+
+    <table class="table-bordered text-center">
+    <thead>
+        <tr>
+            <th rowspan="2">
+                @Html.Encode(Resources.Models.Organization.Strings.Name)
+            </th>
+            <th colspan="3" class="text-center">
+                @Html.Encode(Resources.TournamentManagement.Slot.Strings.TeamsLabel)
+                <span class="label label-info">
+                    @Html.Encode(Resources.TournamentManagement.Slot.Strings.CapLabel):
+                    @teamCap
+                </span>
+            </th>
+            <th colspan="3" class="text-center">
+                @Html.Encode(Resources.TournamentManagement.Slot.Strings.AdjudicatorsLabel)
+                <span class="label label-info">
+                    @Html.Encode(Resources.TournamentManagement.Slot.Strings.CapLabel):
+                    @adjCap
+                </span>
+            </th>
+        </tr>
+        <tr>
+            <th class="text-center">
+                @Html.Encode(Resources.TournamentManagement.Slot.Strings.ConfirmedLabel)
+                <span class="label label-success">
+                    @Model.SlotAssignments.Sum(a => a.Registration.TeamsPaid)
+                </span>
+            </th>
+            <th class="text-center">
+                @Html.Encode(Resources.TournamentManagement.Slot.Strings.WaitingLabel)
+                <span class="label label-warning">
+                    @Model.SlotAssignments.Sum(a => a.Registration.TeamsWanted - a.Assignment.TeamsGranted)
+                </span>
+            </th>
+            <th class="text-center">
+                @Html.Encode(Resources.TournamentManagement.Slot.Strings.GrantedLabel)
+                <span class="label label-default">
+                    @Model.SlotAssignments.Sum(a => a.Assignment.TeamsGranted)
+                </span>
+            </th>
+
+            <th class="text-center">
+                @Html.Encode(Resources.TournamentManagement.Slot.Strings.ConfirmedLabel)
+                <span class="label label-success">
+                    @Model.SlotAssignments.Sum(a => a.Registration.AdjudicatorsPaid)
+                </span>
+            </th>
+            <th class="text-center">
+                @Html.Encode(Resources.TournamentManagement.Slot.Strings.WaitingLabel)
+                <span class="label label-warning">
+                    @Model.SlotAssignments.Sum(a => a.Registration.AdjudicatorsWanted - a.Assignment.AdjucatorsGranted)
+                </span>
+            </th>
+            <th class="text-center">
+                @Html.Encode(Resources.TournamentManagement.Slot.Strings.GrantedLabel)
+                <span class="label label-default">
+                    @Model.SlotAssignments.Sum(a => a.Assignment.AdjucatorsGranted)
+                </span>
+            </th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @foreach (var item in Model.SlotAssignments) {
+            String bgTeams = "bg-success";
+            if (item.Registration.TeamsPaid < item.Assignment.TeamsGranted) {
+                bgTeams = "bg-danger";
+            } 
+            else if (item.Assignment.TeamsGranted < item.Registration.TeamsWanted) {
+                bgTeams = "bg-warning";
+            }
+
+            String bgAdjs = "";
+            if (item.Registration.AdjudicatorsPaid < item.Assignment.AdjucatorsGranted) {
+                bgAdjs = "bg-danger";
+            }
+            else if (item.Assignment.AdjucatorsGranted < item.Registration.AdjudicatorsWanted) {
+                bgAdjs = "bg-warning";
+            }
+
+            <tr>
+                <td class="text-left">
+                    @Html.DisplayFor(model => item.Registration.Organization.Name)
+                </td>
+                <td class="@bgTeams">
+                    @Html.DisplayFor(model => item.Registration.TeamsPaid)
+                </td>
+                <td class="@bgTeams">
+                    @(item.Registration.TeamsWanted - item.Assignment.TeamsGranted)
+                </td>
+                <td class="@bgTeams">
+                    @Html.DisplayFor(model => item.Assignment.TeamsGranted)
+                </td>
+                <td class="@bgAdjs">
+                    @Html.DisplayFor(model => item.Registration.AdjudicatorsPaid)
+                </td>
+                <td class="@bgAdjs">
+                    @(item.Registration.AdjudicatorsWanted - item.Assignment.AdjucatorsGranted)
+                </td>
+                <td class="@bgAdjs">
+                    @Html.DisplayFor(model => item.Assignment.AdjucatorsGranted)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+}

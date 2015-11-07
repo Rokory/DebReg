@@ -1,0 +1,64 @@
+﻿@model DebReg.Web.Areas.TournamentManagement.Models.PaymentViewModel
+<tr>
+
+    @*REGISTRATION*@
+
+    <td rowspan="2">
+        @Html.HiddenFor(model => model.OrganizationId)
+        <a href="javascript:void (0);" onclick="displayOrganizationDetails('@Model.OrganizationId')">
+            <strong>@Html.DisplayFor(model => model.OrganizationName)</strong>
+        </a>
+    </td>
+    <td rowspan="2">
+        @Html.HiddenFor(model => model.Date)
+        @Html.DisplayFor(model => model.Date, "DateISO")
+    </td>
+    <td rowspan="2" class="text-right">
+        @Html.HiddenFor(model => model.Value)
+        @Html.DisplayFor(model => model.Value)
+    </td>
+    <td rowspan="2">
+        @Html.HiddenFor(model => model.Note)
+        @Html.DisplayFor(model => model.Note)
+    </td>
+    <th>@Resources.Strings.OldCaption</th>
+    <td class="text-right">
+        @Html.HiddenFor(model => model.Balance)
+        @Html.DisplayFor(model => model.Balance)
+    </td>
+    <td rowspan="2" class="text-center">
+        @Html.DisplayFor(model => model.TeamsGranted)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(model => model.TeamsPaidOld)
+    </td>
+    <td rowspan="2" class="text-center">
+        @Html.DisplayFor(model => model.AdjudicatorsGranted)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(model => model.AdjudicatorsPaidOld)
+    </td>
+    <td rowspan="2">
+        <button class="btn btn-danger" type="submit" name="paymentToDelete" value="@Model.OrganizationId">
+            <span class="glyphicon glyphicon-remove"></span>
+        </button>
+    </td>
+</tr>
+<tr>
+    <th>@Resources.Strings.NewCaption</th>
+    @{
+        var newBalance = Model.Balance + Model.Value;
+    }
+    <td class="text-right">
+        @Html.HiddenFor(model => model.Value)
+        @Html.DisplayFor(model => newBalance)
+    </td>
+    <td>
+        @Html.EditorFor(model => model.TeamsPaid, new { htmlAttributes = new { @class = "form-control text-center" } })
+        @Html.ValidationMessageFor(model => model.TeamsPaid, "", new { @class = "text-danger" })
+    </td>
+    <td>
+        @Html.EditorFor(model => model.AdjudicatorsPaid, new { htmlAttributes = new { @class = "form-control text-center" } })
+        @Html.ValidationMessageFor(model => model.AdjudicatorsPaid, "", new { @class = "text-danger" })
+    </td>
+</tr>

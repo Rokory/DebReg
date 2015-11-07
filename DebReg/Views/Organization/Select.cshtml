@@ -1,0 +1,42 @@
+﻿@model IEnumerable<DebReg.Models.OrganizationUser>
+
+@{
+    ViewBag.Title = Resources.Organization.Select.Strings.Title;
+}
+
+<h2>@Html.Encode(Resources.Organization.Select.Strings.Heading)</h2>
+<hr />
+@using (@Html.BeginForm(new { returnUrl = ViewBag.returnUrl })) {
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Organization.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Role)
+            </th>
+            <th></th>
+        </tr>
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Organization.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Role)
+            </td>
+            <td>
+                <button name="id" class="btn btn-default" value="@item.OrganizationId" type="submit">@Resources.Organization.Select.Strings.SelectButton</button>
+            </td>
+        </tr>
+    }
+    
+    </table>
+    <p>
+        @Html.ActionLink(
+            Resources.Organization.Select.Strings.RegisterNewOrganizationLink,
+            "Register",
+            new { returnUrl = ViewBag.returnUrl }
+        )
+    </p>
+}

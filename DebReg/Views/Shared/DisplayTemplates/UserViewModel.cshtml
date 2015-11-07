@@ -1,0 +1,111 @@
+﻿@model DebReg.Web.Models.UserViewModel
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.User.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.LastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.Email)
+        </dd>
+
+        @if (!String.IsNullOrWhiteSpace(Model.User.NewEMail) && Model.User.Email != Model.User.NewEMail)
+        {
+            <dt>
+            </dt>
+
+            <dd>
+                <div>
+                    <strong>@Html.DisplayNameFor(model => model.User.NewEMail)</strong>
+                </div>
+                <div>
+                    @Html.DisplayFor(model => model.User.NewEMail)
+                </div>
+                <div class="text-warning">
+                    @Resources.User.Display.Strings.EMailChangePending
+                </div>
+                <div>
+                    @Resources.User.Display.Strings.ConfirmationMailNotReceived
+                    @{
+            Guid? tournamentId = null;
+            if (Model.Tournament != null)
+            {
+                tournamentId = Model.Tournament.Id;
+            }
+                    }
+                    @Html.ActionLink(
+                        Resources.User.Display.Strings.ResendConfirmationMail,
+                        "SendConfirmEMail",
+                            new { userId = Model.User.Id, tournamentId = tournamentId }
+                    )
+                </div>
+            </dd>
+        }
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.PhoneNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.PhoneNumber)
+        </dd>
+
+        @{
+            var commonUserProperties = Model.UserProperties.Where(p => !p.TournamentSpecific);
+            var tournamentUserProperties = Model.UserProperties.Where(p => p.TournamentSpecific);
+        }
+
+        @* Common user properties *@
+
+
+        @foreach (var userProperty in commonUserProperties)
+        {
+            <dt>
+                @Html.DisplayFor(model => userProperty.Name)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => userProperty)
+            </dd>
+        }
+    </dl>
+
+    @* Tournament specific user properties *@
+
+    @if (tournamentUserProperties.Count() > 0)
+    {
+        <h3>
+            @String.Format(Resources.User.Display.Strings.HeadingForTournamentData, Model.Tournament.Name)
+        </h3>
+
+        <dl class="dl-horizontal">
+
+            @foreach (var userProperty in tournamentUserProperties)
+            {
+                <dt>
+                    @Html.DisplayFor(model => userProperty.Name)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => userProperty.DisplayValue)
+                </dd>
+            }
+        </dl>
+    }
+
+</div>

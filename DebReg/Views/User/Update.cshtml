@@ -1,0 +1,108 @@
+﻿@model DebReg.Web.Models.UserViewModel
+
+@{
+    if (Model.Tournament == null)
+    {
+        ViewBag.Title = Resources.User.Update.Strings.Title;
+    }
+    else
+    {
+        ViewBag.Title = Resources.User.Update.Strings.TitleForTournamentData;
+    }
+}
+
+
+<div class="container">
+    <h2>
+        @Resources.User.Update.Strings.Heading
+    </h2>
+    <hr />
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+        
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            @* User data *@
+
+            @* Firstname *@
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.User.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.User.FirstName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            @* Lastname *@
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.User.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.User.LastName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            @* E-Mail *@
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.HiddenFor(model => model.User.Email)
+                    @Html.EditorFor(model => model.User.NewEMail, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.User.NewEMail, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            @* Phone number *@
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.PhoneNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.User.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.User.PhoneNumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            @* Common user properties *@
+
+            @for (int i = 0; i < Model.UserProperties.Count; i++)
+            {
+                if (!Model.UserProperties[i].TournamentSpecific)
+                {
+                    <div class="form-group">
+                        @Html.EditorFor(model => model.UserProperties[i])
+                    </div>
+                }
+            }
+
+            @* Tournament specific user properties *@
+
+            @if (Model.UserProperties.Where(p => p.TournamentSpecific).Count() > 0)
+            {
+                <h3>
+                    @String.Format(Resources.User.Update.Strings.HeadingForTournamentData, Model.Tournament.Name)
+                </h3>
+                for (int i = 0; i < Model.UserProperties.Count; i++)
+                {
+                    if (Model.UserProperties[i].TournamentSpecific)
+                    {
+                        <div class="form-group">
+                            @Html.EditorFor(model => model.UserProperties[i])
+                        </div>
+                    }
+                }
+
+            }
+
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="@Html.Encode(Resources.User.Update.Strings.UpdateButtonCaption)" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+</div>

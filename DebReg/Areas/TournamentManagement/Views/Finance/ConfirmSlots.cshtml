@@ -1,0 +1,89 @@
+﻿@model IList<DebReg.Web.Areas.TournamentManagement.Models.RegistrationFinancialViewModel>
+@{
+    ViewBag.Title = Resources.TournamentManagement.Finance.ConfirmSlots.Strings.Title;
+    Html.RenderPartial("OrganizationDetailsDialogPartial");
+}
+
+<h2>@Resources.TournamentManagement.Finance.ConfirmSlots.Strings.Heading</h2>
+@if (Model.Count > 0) {
+    using (Html.BeginForm()) {
+        @Html.ValidationSummary(false, "", new { @class = "bg-danger"} )
+        <table class="table-striped table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <th rowspan="2">@Html.DisplayNameFor(model => model[0].OrganizationName)</th>
+                    <th rowspan="2">@Html.DisplayNameFor(model => model[0].BookingCode)</th>
+                    <th rowspan="2" class="text-right">
+                        @Html.DisplayNameFor(model => model[0].Balance)
+                        <br />
+                        <span class="label label-info">@Model.Sum(r => r.Balance)</span>
+                    </th>
+                    <th colspan="2" class="text-center">@Resources.TournamentManagement.Finance.Strings.TeamsCaption</th>
+                    <th colspan="2" class="text-center">@Resources.TournamentManagement.Finance.Strings.AdjudicatorsCaption</th>
+                </tr>
+                <tr>
+                    <th class="text-center">
+                        @Resources.TournamentManagement.Finance.Strings.GrantedCaption
+                        <br />
+                        <span class="label label-info">@Model.Sum(r => r.TeamsGranted)</span>
+                    </th>
+                    <th class="text-center">
+                        @Resources.TournamentManagement.Finance.Strings.PaidCaption
+                        <br />
+                        <span class="label label-info">@Model.Sum(r => r.TeamsPaid)</span>
+                    </th>
+                    <th class="text-center">
+                        @Resources.TournamentManagement.Finance.Strings.GrantedCaption
+                        <br />
+                        <span class="label label-info">@Model.Sum(r => r.AdjudicatorsGranted)</span>
+                    </th>
+                    <th class="text-center">
+                        @Resources.TournamentManagement.Finance.Strings.PaidCaption
+                        <br />
+                        <span class="label label-info">@Model.Sum(r => r.AdjudicatorsPaid)</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Count; i++) {
+                    <tr>
+                        @Html.HiddenFor(model => model[i].OrganizationId)
+                        <td>
+                            <a href="javascript:void (0);" onclick="displayOrganizationDetails('@Model[i].OrganizationId')">
+                                @Html.DisplayFor(model => model[i].OrganizationName)
+                                @Html.HiddenFor(model => model[i].OrganizationName)
+                            </a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model[i].BookingCode)
+                            @Html.HiddenFor(model => model[i].BookingCode)
+                        </td>
+                        <td class="text-right">
+                            @Html.DisplayFor(model => model[i].Balance)
+                            @Html.HiddenFor(model => model[i].Balance)
+                        </td>
+                        <td class="text-center">
+                            @Html.DisplayFor(model => model[i].TeamsGranted)
+                            @Html.HiddenFor(model => model[i].TeamsGranted)
+                        </td>
+                        <td class="text-center">
+                            @Html.EditorFor(model => model[i].TeamsPaid, new { htmlAttributes = new { @class = "form-control text-center" } })
+                            @Html.ValidationMessageFor(model => model[i].TeamsPaid, "", new { @class = "text-danger" })
+                        </td>
+                        <td class="text-center">
+                            @Html.DisplayFor(model => model[i].AdjudicatorsGranted)
+                            @Html.HiddenFor(model => model[i].AdjudicatorsGranted)
+                        </td>
+                        <td class="text-center">
+                            @Html.EditorFor(model => model[i].AdjudicatorsPaid, new { htmlAttributes = new { @class = "form-control text-center" } })
+                            @Html.ValidationMessageFor(model => model[i].AdjudicatorsPaid, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <p>
+            <button type="submit" class="btn btn-danger">@Resources.TournamentManagement.Finance.Index.Strings.UpdatePaidSlotsButtonCaption</button>
+        </p>
+    }
+}

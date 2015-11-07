@@ -1,0 +1,24 @@
+﻿@using System.Text
+
+@model DebReg.Models.Address
+
+@if (Model != null) {
+    StringBuilder addressLine = new StringBuilder();
+    String[] addressFields = new String[] {
+        Model.StreetAddress1,
+        Model.StreetAddress2,
+        Model.PostalCode + " " + Model.City,
+        Model.Region,
+        Model.Country
+    };
+
+    foreach (var item in addressFields) {
+        if (!String.IsNullOrWhiteSpace(item)) {
+            if (addressLine.Length > 0) {
+                addressLine.Append(", ");
+            }
+            addressLine.Append(item);
+        }
+    }
+    @addressLine.ToString();
+}

@@ -1,0 +1,52 @@
+﻿@model DebReg.Models.Organization
+
+@{
+    ViewBag.Title = Resources.Organization.Register.Strings.Title;
+}
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+        
+    <div class="form-horizontal">
+        <h2>@Html.Encode(Resources.Organization.Register.Strings.Heading)</h2>
+        <hr />
+        @Html.EditorFor(model => Model)
+        <hr />
+        
+        @* Hidden button to catch enter key. *@
+        <button type="submit" name="action" value="Save" class="btn btn-default" style="display:none">
+            @Html.Encode(Resources.Organization.Register.Strings.SaveButton)
+        </button>
+        @* End hidden button *@
+
+        <h3>@Html.LabelFor(model => model.LinkedOrganizations)</h3>
+        @for (int i = 0; i < Model.LinkedOrganizations.Count; i++) {
+            <h4>@Html.Encode(Resources.Organization.Register.Strings.UniversityHeading)</h4>
+            <button type="submit" name="action" value="Remove" class="btn btn-default">
+                @Html.Encode(Resources.Organization.Register.Strings.RemoveButton)
+            </button>
+            @Html.Hidden("remove", i)
+            @Html.EditorFor(m => m.LinkedOrganizations[i])
+            <hr />
+        }
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" name="action" value="Add" class="btn btn-default">
+                    @Html.Encode(Resources.Organization.Register.Strings.AddButton)
+                </button>
+            </div>
+        </div>
+        <hr />
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" name="action" value="Save" class="btn btn-default">
+                    @Html.Encode(Resources.Organization.Register.Strings.SaveButton)
+                </button>
+            </div>
+        </div>
+    </div>
+    <div style="clear:both"></div>
+}    

@@ -1,0 +1,45 @@
+﻿@model DebReg.Models.Organization
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        @if (Model.LinkedOrganizationId == Guid.Empty || Model.LinkedOrganizationId == null) {
+            <dt>
+                @Html.DisplayNameFor(model => model.Abbreviation)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Abbreviation)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.University)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.University)
+            </dd>
+        }
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.VatId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VatId)
+        </dd>
+    </dl>
+    @if (Model.Address != null) {
+        @Html.DisplayFor(model => model.Address)
+    }
+</div>
+@if (Model.LinkedOrganizations != null && Model.LinkedOrganizations.Count > 0) {
+    <h3>@Html.Encode(Resources.Shared.Organization.Strings.LinkedOrganizationsHeading)</h3>
+    @Html.DisplayFor(model => model.LinkedOrganizations)
+}

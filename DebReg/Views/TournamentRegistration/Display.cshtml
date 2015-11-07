@@ -1,0 +1,331 @@
+﻿@using DebReg.Models
+@model DebReg.Web.Models.TournamentOrganizationRegistrationViewModel
+@{
+    ViewBag.Title = Resources.TournamentRegistration.Display.Strings.Title;
+}
+
+
+@Html.Partial("FindUser")
+<!-- <script src="~/Scripts/findUser.js"></script>-->
+
+
+
+<div class="col-sm12">
+
+    <!-- Tabs -->
+
+    <div class="panel with-nav-tabs panel-default">
+        <div class="panel-heading">
+            <ul class="nav nav-tabs">
+                <li class="@(ViewBag.Tab == "tournament" ? "active" : "")">
+                    <a href="#tournament" data-toggle="tab">
+                        @Html.Encode(Resources.Tournament.DisplayPartial.Strings.Heading)
+                    </a>
+                </li>
+                <li class="@(ViewBag.Tab == "registration" || String.IsNullOrWhiteSpace(ViewBag.Tab) ? "active" : "")">
+                    <a href="#registration" data-toggle="tab">
+                        @Html.Encode(Resources.TournamentRegistration.Display.Strings.YourRegistrationHeading)
+                    </a>
+                </li>
+
+                @if (Model.Adjudicators.Count > 0 || Model.Teams.Count > 0)
+                {
+                    <li class="@(ViewBag.Tab == "persons" ? "active" : "")">
+                        <a href="#persons" data-toggle="tab">
+                            @Html.Encode(Resources.TournamentRegistration.Display.Strings.TeamsAndAdjudicatorsHeading)
+                        </a>
+                    </li>
+
+                }
+                <li class="@(ViewBag.Tab == "account" ? "active" : "")">
+                    <a href="#account" data-toggle="tab">
+                        @Html.Encode(Resources.TournamentRegistration.Display.Strings.Account)
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="panel-body">
+
+            <!-- tab-content -->
+
+            <div class="tab-content">
+
+                <!-- Tournament tab -->
+
+                <div class="tab-pane fade in @(ViewBag.Tab == "tournament" ? "active" : "")" id="tournament">
+                    @Html.Action("DisplayPartial", "Tournament", new { tournamentId = Model.Registration.TournamentId })
+                </div>
+               
+                <!-- Registration tab -->
+
+                <div class="tab-pane fade in @(ViewBag.Tab == "registration" || String.IsNullOrWhiteSpace(ViewBag.Tab) ? "active" : "")" id="registration">
+                    <h3>@Html.DisplayFor(m => m.Registration.Tournament.Name)</h3>
+
+                    <!-- Organization status -->
+
+                    <div class="row">
+                        <div class="col-sm-8 text-right">
+                            <strong>@Html.DisplayNameFor(m => m.Registration.OrganizationStatus)</strong>
+                        </div>
+                        <div class="col-sm-4">
+                            @{
+                                OrganizationStatus status = Model.Registration.OrganizationStatus;
+                                String statusNote = Model.Registration.OrganizationStatusNote;
+                                if (Model.Registration.OrganizationStatusDraft) {
+                                    status = OrganizationStatus.Unknown;
+                                    statusNote = String.Empty;
+                                }
+                                <p>
+                                    @Html.DisplayFor(model => status)
+                                </p>
+                                <p>
+                                    @Html.DisplayFor(model => statusNote)
+                                </p>
+                            }
+                        </div>
+                    </div>
+                    
+                    <!-- Billed Orgnization -->
+                    
+                    <div class="row">
+                        <div class="col-sm-8 text-right">
+                            <strong>@Html.DisplayNameFor(m => m.Registration.BilledOrganization)</strong>
+                        </div>
+                        <div class="col-sm-4">
+                            @Html.DisplayFor(m => m.Registration.BilledOrganization.Name)
+                        </div>
+                    </div>
+
+                    <!-- Balance -->
+
+                    <div class="row">
+                        @{
+                            Decimal balance = Model.Bookings.Sum(b => b.Value * (b.Credit ? 1 : -1));
+                            String bgBalance = "";
+                            if (balance > 0) {
+                                bgBalance = "bg-success";
+                            }
+                            if (balance < 0) {
+                                bgBalance = "bg-danger";
+                            }
+                        }
+                        <div class="col-sm-8 text-right">
+                            <strong>@Resources.TournamentRegistration.Strings.Balance</strong>
+                        </div>
+                        <div class="col-sm-4 @bgBalance">
+                            @Html.DisplayFor(model => model.Registration.Tournament.Currency.Symbol) &nbsp;@Html.DisplayFor(model => balance)
+                        </div>
+                    </div>
+                    
+                    <!-- Team wating -->
+
+                    <div class="row">
+                        <div class="col-sm-8 text-right">
+                            <strong>@Html.Encode(Resources.TournamentRegistration.Display.Strings.TeamsWaitingLabel)</strong>
+                        </div>
+
+                        <div class="col-sm-4">
+                            @(Model.Registration.TeamsWanted - Model.Registration.TeamsGranted)
+                        </div>
+                    </div>
+                    
+                    <!-- Teams awaiting payment -->
+                    
+                    <div class="row">
+                        <div class="col-sm-8 text-right">
+                            <strong>@Html.Encode(Resources.TournamentRegistration.Display.Strings.TeamsAwaitingPaymentLabel) </strong>
+                        </div>
+
+                        <div class="col-sm-4">
+                            @(Model.Registration.TeamsGranted - Model.Registration.TeamsPaid)
+                        </div>
+                    </div>
+                    
+                    <!-- Teams confirmed -->
+                    
+                    <div class="row">
+                        <div class="col-sm-8 text-right">
+                            <strong>@Html.Encode(Resources.TournamentRegistration.Display.Strings.TeamsConfirmedLabel)</strong>
+                        </div>
+
+                        <div class="col-sm-4">
+                            @Html.DisplayFor(model => model.Registration.TeamsPaid)
+                        </div>
+                    </div>
+
+                    <!-- Teams completed -->
+
+                    <div class="row">
+                        <div class="col-sm-8 text-right">
+                            <strong>@Resources.TournamentRegistration.Display.Strings.TeamsCompletedLabel</strong>
+                        </div>
+
+                        <div class="col-sm-4">
+                            @Html.DisplayFor(model => model.TeamsCompleted)
+                        </div>
+                    </div>
+
+                    
+                    <!-- Adjudicators wating -->
+                    
+                    <div class="row">
+                        <div class="col-sm-8 text-right">
+                            <strong>@Html.Encode(Resources.TournamentRegistration.Display.Strings.AdjucatorsWaitingLabel)</strong>
+                        </div>
+
+                        <div class="col-sm-4">
+                            @(Model.Registration.AdjudicatorsWanted - Model.Registration.AdjudicatorsGranted)
+                        </div>
+                    </div>
+                    
+                    <!-- Adjudicators awaiting payment -->
+                    
+                    <div class="row">
+                        <div class="col-sm-8 text-right">
+                            <strong>@Html.Encode(Resources.TournamentRegistration.Display.Strings.AdjucatorsAwaitingPayment)</strong>
+                        </div>
+
+                        <div class="col-sm-4">
+                            @(Model.Registration.AdjudicatorsGranted - Model.Registration.AdjudicatorsPaid)
+                        </div>
+                    </div>
+                    
+                    <!-- Adjudicators confirmed -->
+                    
+                    <div class="row">
+                        <div class="col-sm-8 text-right">
+                            <strong>@Html.Encode(Resources.TournamentRegistration.Display.Strings.AdjucatorsConfirmedLabel)</strong>
+                        </div>
+
+                        <div class="col-sm-4">
+                            @Html.DisplayFor(model => model.Registration.AdjudicatorsPaid)
+                        </div>
+                    </div>
+                    
+                    
+                    <!-- Adjudicators completed -->
+
+                    <div class="row">
+                        <div class="col-sm-8 text-right">
+                            <strong>@Resources.TournamentRegistration.Display.Strings.AdjudicatorsCompletedLabel</strong>
+                        </div>
+
+                        <div class="col-sm-4">
+                            @Html.DisplayFor(model => model.AdjudicatorsCompleted)
+                        </div>
+                    </div>
+
+                    
+                    <!-- Registration notes -->
+
+                    <div class="row">
+                        <div class="col-sm-8 text-right">
+                            <strong>@Html.DisplayNameFor(model => model.Registration.Notes)</strong>
+                        </div>
+
+                        <div class="col-sm-4">
+                            @Html.DisplayFor(model => model.Registration.Notes)
+                        </div>
+                    </div>
+
+                    <!-- Terms & conditions -->
+
+                    @if (!String.IsNullOrWhiteSpace(Model.Registration.Tournament.TermsConditions)) {
+                        <p>
+                            @Html.DisplayFor(model => model.Registration.Tournament.TermsConditions)
+                        </p>
+                        <p>
+                            <a href="@Model.Registration.Tournament.TermsConditionsLink">
+                                @Html.DisplayNameFor(model => model.Registration.Tournament.TermsConditionsLink)
+                            </a>
+                        </p>
+                    }
+                    
+                    <!-- Action links -->
+
+                    @if (Model.Registration.Tournament.RegistrationStart < DateTime.UtcNow
+                        && Model.Registration.Tournament.RegistrationEnd > DateTime.UtcNow
+                        && Model.Registration.Tournament.Start > DateTime.UtcNow) {
+                        @Html.ActionLink(
+                        Html.Encode(
+                            Resources.TournamentRegistration.Display.Strings.EditLink),
+                        "Register",
+                        new {
+                            organizationId = Model.Registration.OrganizationId,
+                            tournamentId = Model.Registration.TournamentId
+                        })
+                        @:|
+                        @Html.ActionLink(
+                        Html.Encode(
+                            Resources.TournamentRegistration.Display.Strings.RemoveLink),
+                            "Delete",
+                            new {
+                                organizationId = Model.Registration.OrganizationId,
+                                tournamentId = Model.Registration.TournamentId
+                            })
+                    }
+                </div>
+                
+                
+                <!-- Teams and Adjudicators tab -->
+                
+                @if (Model.Adjudicators.Count > 0 || Model.Teams.Count > 0)
+                {
+                    <div id="persons" class="tab-pane fade in @(ViewBag.Tab == "persons" ? "active" : "")">
+                        @Html.Partial("TeamsAndAdjudicators")
+                    </div>
+                }
+
+                <!-- Account tab -->
+
+                <div id="account" class="tab-pane fade in @(ViewBag.Tab == "account" ? "active" : "")">
+                    <h3>@Html.DisplayFor(m => m.Registration.Tournament.Name)</h3>
+                    <div class="text-right">
+                        @Html.ActionLink(
+                            Resources.TournamentRegistration.Display.Strings.PrintAccountStatementLink,
+                            "PrintAccountStatement",
+                            new { 
+                                tournamentId = Model.Registration.TournamentId, 
+                                organizationId = Model.Registration.OrganizationId },
+                            new { @target = "_blank", @class="btn btn-primary" })
+                    </div>
+                    @Html.DisplayFor(m => m, "Bookings")
+                    @if (!String.IsNullOrWhiteSpace(Model.Registration.Tournament.TermsConditions)) {
+
+
+                        <h4>@Resources.Shared.Bookings.Strings.TermsConditions</h4>
+                        <p>
+                            @Html.DisplayFor(model => model.Registration.Tournament.TermsConditions)
+                        </p>
+                    }
+                    @if (!String.IsNullOrWhiteSpace(Model.Registration.Tournament.TermsConditionsLink)) {
+                        <p>
+                            <a href="@Model.Registration.Tournament.TermsConditionsLink" target="_blank">
+                                @Html.DisplayNameFor(model => model.Registration.Tournament.TermsConditionsLink)
+                            </a>
+                        </p>
+                    }
+                    @if (!String.IsNullOrWhiteSpace(Model.Registration.Tournament.MoneyTransferLinkCaption)
+                        && !String.IsNullOrWhiteSpace(Model.Registration.Tournament.MoneyTransferLink)) {
+
+                        <h4>@Resources.Shared.Bookings.Strings.MoneyTransfer</h4>
+                        <p>@Html.DisplayFor(model => model.Registration.Tournament.MoneyTransferLinkCaption)</p>
+                        <p>
+                            <a href="@Model.Registration.Tournament.MoneyTransferLink" target="_blank">
+                                @Html.DisplayFor(model => model.Registration.Tournament.MoneyTransferLink)
+                            </a>
+                        </p>
+                    }
+                    @Html.DisplayFor(model => model.Registration, "BankData")
+                    @if (!String.IsNullOrWhiteSpace(Model.Registration.Tournament.FinanceEMail)) {
+                        <h4>@Resources.Shared.Bookings.Strings.ProblemsQuestionsHeading</h4>
+                        <p>
+                            @Resources.Shared.Bookings.Strings.ProblemsQuestions
+                            @Html.DisplayFor(model => model.Registration.Tournament.FinanceEMail)
+                        </p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

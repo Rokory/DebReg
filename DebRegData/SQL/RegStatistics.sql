@@ -1,0 +1,1 @@
+﻿select count(OrganizationId), sum(TeamsWanted), sum(AdjudicatorsWanted) from dbo.TournamentOrganizationRegistrations
