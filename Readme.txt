@@ -49,4 +49,7 @@ DebReg Test Guide.docx
 
 A list of all use cases and their dependencies.
 
+Deploying DebReg to Microsoft Azure.docx
+----------------------------------------
 
+A guide on how to host DebReg for free in Microsoft Azure.
