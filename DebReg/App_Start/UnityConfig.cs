@@ -1,8 +1,18 @@
-using System;
+using DebReg.Data;
+using DebReg.Models;
+using DebReg.Security;
+using DebReg.Web.Infrastructure;
+using DebRegCommunication;
+using DebRegComponents;
+using DebRegOrchestration;
+using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security;
 using Microsoft.Practices.Unity;
-using Microsoft.Practices.Unity.Configuration;
+using System;
+using System.Data.Entity;
+using System.Web;
 
-namespace DebReg.Web.App_Start
+namespace DebReg.Web
 {
     /// <summary>
     /// Specifies the Unity configuration for the main container.
@@ -37,6 +47,39 @@ namespace DebReg.Web.App_Start
 
             // TODO: Register your types here
             // container.RegisterType<IProductRepository, ProductRepository>();
+
+            // Data Layer
+            container.RegisterType<DebRegContext>(new PerResolveLifetimeManager());
+            container.RegisterType<DbContext, DebRegContext>();
+            //container.RegisterType<IUnitOfWork, DBUnitOfWork>(new InjectionConstructor(DebRegContext.Get()));
+            container.RegisterType<IUnitOfWork, DBUnitOfWork>();
+
+            // Security
+            //container.RegisterType<IUserStore<User>, UserStore<User>>(new InjectionConstructor(DebRegContext.Get()));
+            container.RegisterType<ApplicationUserStore<User>>();
+            container.RegisterType<IUserStore<User>, ApplicationUserStore<User>>();
+            //container.RegisterType<DebRegUserManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().GetUserManager<DebRegUserManager>()));
+            container.RegisterType<DebRegUserManager>();
+            container.RegisterType<IAuthenticationManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().Authentication));
+            container.RegisterType<ISecurityManager, SecurityManager>();
+
+
+            // Communication layer
+            container.RegisterType<IEMailService, SMTPEMail>();
+            container.RegisterType<ISendMail, SendMail>();
+
+            // Infrastructure
+            container.RegisterType<IPasswordHelper, PasswordHelper>();
+
+            // Components
+            container.RegisterType<ISlotAssignmentManager, SlotAssignmentManager>();
+            container.RegisterType<ITournamentManager, TournamentManager>();
+            container.RegisterType<ITournamentRegistrationsManager, TournamentRegistrationsManager>();
+            container.RegisterType<ISlotManager, SlotManager>();
+            container.RegisterType<IBookingManager, BookingManager>();
+            container.RegisterType<IOrganizationManager, OrganizationManager>();
+            container.RegisterType<IPaymentManager, PaymentManager>();
+            container.RegisterType<ICountryManager, CountryManager>();
         }
     }
 }
